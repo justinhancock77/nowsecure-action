@@ -19,6 +19,10 @@ inputs:
   group_id:
     required: true
     description: "Group ID for the application in Platform."
+  create_issues:
+    required: false
+    description: "Enable creation of GitHub Issues."
+    default: true
 runs:
   using: "node16"
   main: "../dist/nowsecure-upload-app/index.js"

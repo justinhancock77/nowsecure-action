@@ -15,6 +15,9 @@ jobs:
     outputs:
       report_id: ${{ steps.uploadAndScan.outputs.report_id }}
     steps:
+      - run: echo "enable sarif@@ ${{ github.event.inputs.enable_sarif }}"
+        shell: bash
+
       - name: Checkout repository
         uses: actions/checkout@v2
 
