@@ -12,7 +12,7 @@ async function run() {
   // need to take the output and iterate over it and create issues,
   // WITHOUT duplicating issues on each run.  Need to use the hash / something
   // unique to determine whether the GH issue exists already
-  
+
   try {
     const apiUrl = core.getInput("api_url");
     const labApiUrl = core.getInput("lab_api_url");

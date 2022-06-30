@@ -76,9 +76,9 @@ jobs:
       name: nowsecure-env
     needs: scan
     steps:
-      - run: echo "enable sarif: ${{ inputs.enable_sarif }}"
+      - run: echo "enable sarif ${{ inputs.enable_sarif }}"
         shell: bash
-      - run: echo "create_issues: ${{ inputs.create_issues }}"
+      - run: echo "create_issues ${{ inputs.create_issues }}"
       - name: Checkout repository
         uses: actions/checkout@v2
 
