@@ -28,7 +28,7 @@ jobs:
           -o app.apk
 
       - id: uploadAndScan
-        uses: ./.github/actions/upload-action
+        uses: justinhancock77/nowsecure-action/upload-app@main
         timeout-minutes: 20
         with:
           token: ${{ secrets.NS_TOKEN }}
@@ -50,7 +50,7 @@ jobs:
       - run: echo "report_id output ${{ needs.scan.outputs.report_id }}"
         shell: bash
       - id: pull_report
-        uses: ./.github/actions/sarif-action
+        uses: justinhancock77/nowsecure-action/convert-sarif@main
         timeout-minutes: 15
         with:
           report_id: ${{ needs.scan.outputs.report_id }}
