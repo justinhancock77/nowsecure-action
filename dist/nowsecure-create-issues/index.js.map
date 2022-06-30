@@ -1,0 +1,1 @@
+{"version":3,"file":"index.js","mappings":";;;AAAA;AACA;;;;ACDA","sources":["../webpack://nowsecure-action/webpack/runtime/compat","../webpack://nowsecure-action/./src/nowsecure-create-issues.ts"],"sourcesContent":["\nif (typeof __webpack_require__ !== 'undefined') __webpack_require__.ab = __dirname + \"/\";","\"use strict\";\n"],"names":[],"sourceRoot":""}

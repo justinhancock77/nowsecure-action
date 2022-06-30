@@ -1,0 +1,28 @@
+name: "NowSecure: Create Issues"
+description: "Create GitHub issues after NowSecure analysis"
+author: "NowSecure Inc."
+inputs:
+  token:
+    required: true
+    description: "NowSecure Platform token."
+  api_url:
+    required: false
+    description: "NowSecure GraphQL API endpoint."
+    default: "https://api.nowsecure.com"
+  lab_api_url:
+    required: false
+    description: "NowSecure Lab API endpoint."
+    default: "https://lab-api.nowsecure.com"
+  group_id:
+    required: true
+    description: "Group ID for the application in Platform."
+  create_issues:
+    required: false
+    description: "Enable creation of GitHub Issues."
+    default: true
+runs:
+  using: "node16"
+  main: "../dist/nowsecure-create-issues/index.js"
+branding:
+  icon: alert-triangle
+  color: red
