@@ -89,7 +89,7 @@ jobs:
           report_id: ${{ needs.scan.outputs.report_id }}
           token: ${{ secrets.NS_TOKEN }}
           # TODO: Replace the Group ID.
-          group_id: "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+          group_id: "99873c1b-11ca-4c4a-9f15-3231317a382a"
 
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v1
