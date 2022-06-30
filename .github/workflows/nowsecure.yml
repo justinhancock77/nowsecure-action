@@ -14,38 +14,38 @@ on:
 
 jobs:
   # EXAMPLE: Build and upload an Android application to GH artifacts.
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+  # build:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v2
 
-      - name: Install Java
-        uses: actions/setup-java@v2
-        with:
-          java-version: "11"
-          distribution: "adopt"
-          cache: "gradle"
+  #     - name: Install Java
+  #       uses: actions/setup-java@v2
+  #       with:
+  #         java-version: "11"
+  #         distribution: "adopt"
+  #         cache: "gradle"
 
-      - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@v1
+  #     - name: Validate Gradle wrapper
+  #       uses: gradle/wrapper-validation-action@v1
 
-      - name: Build application
-        run: ./gradlew assembleDebug --stacktrace --no-daemon
+  #     - name: Build application
+  #       run: ./gradlew assembleDebug --stacktrace --no-daemon
 
-      - name: Upload application
-        uses: actions/upload-artifact@v2
-        with:
-          name: app
-          path: ./app/build/outputs/apk/insecure/debug/app-insecure-debug.apk
-          retention-days: 3
+  #     - name: Upload application
+  #       uses: actions/upload-artifact@v2
+  #       with:
+  #         name: app
+  #         path: ./app/build/outputs/apk/insecure/debug/app-insecure-debug.apk
+  #         retention-days: 3
 
   # Scan the Android application with NowSecure.
   scan:
     runs-on: ubuntu-latest
     outputs:
       report_id: ${{ steps.upload.outputs.report_id }}
-    needs: build
+    #needs: build
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
