@@ -22,14 +22,13 @@ export async function run() {
     auth: core.getInput("GITHUB_TOKEN"),
   });
   console.log("octokit loaded");
-  console.log("something", octokit.auth.toString);
 
   // Compare: https://docs.github.com/en/rest/reference/users#get-the-authenticated-user
   // const {
   //   data: { login },
   // } = await octokit.rest.users.getAuthenticated();
 
-  const { data } = await octokit.request("/user");
+  const { data } = await octokit.request("GET /user", {});
   console.log("Hello, %s", data);
 }
 

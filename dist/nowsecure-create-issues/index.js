@@ -59000,14 +59000,19 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         const apiUrl = core.getInput("api_url");
         const labApiUrl = core.getInput("lab_api_url");
+        const token = core.getInput("GITHUB_TOKEN");
+        console.log("@@@@@@@@@token", token);
         // Create a personal access token at https://github.com/settings/tokens/new?scopes=repo
         const octokit = new action_1.Octokit({
-            auth: core.getInput("token"),
+            auth: core.getInput("GITHUB_TOKEN"),
         });
-        console.log("octokit", octokit);
+        console.log("octokit loaded");
         // Compare: https://docs.github.com/en/rest/reference/users#get-the-authenticated-user
-        const { data: { login }, } = yield octokit.rest.users.getAuthenticated();
-        console.log("Hello, %s", login);
+        // const {
+        //   data: { login },
+        // } = await octokit.rest.users.getAuthenticated();
+        const { data } = yield octokit.request("GET /user", {});
+        console.log("Hello, %s", data);
     });
 }
 exports.run = run;
