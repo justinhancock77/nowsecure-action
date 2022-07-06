@@ -28,8 +28,22 @@ export async function run() {
   //   data: { login },
   // } = await octokit.rest.users.getAuthenticated();
 
-  const { data } = await octokit.request("GET /user", {});
-  console.log("Hello, %s", data);
+  // const { data } = await octokit.request("GET /user", {});
+
+  // Octokit.js
+  // https://github.com/octokit/core.js#readme
+
+  await octokit.request("POST /repos/{owner}/{repo}/issues", {
+    owner: "justinhancock77",
+    repo: "nowsecure-action",
+    title: "Found a bug",
+    body: "I'm having a problem with this.",
+    assignees: ["octocat"],
+    milestone: 1,
+    labels: ["bug"],
+  });
+
+  //console.log("Hello, %s", data);
 }
 
 run();
