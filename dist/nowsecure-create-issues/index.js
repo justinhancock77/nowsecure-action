@@ -59168,7 +59168,7 @@ function run() {
         const ns = new nowsecure_client_1.NowSecure(platformToken, apiUrl, labApiUrl);
         let report = yield ns.pullReport(reportId);
         console.log("report data:", report.data);
-        if (report.data.auto.assessments[0].report) {
+        if (report.data) {
             console.log("we have a report", report.data.auto.assessments[0].report);
         }
         const octokit = new action_1.Octokit({

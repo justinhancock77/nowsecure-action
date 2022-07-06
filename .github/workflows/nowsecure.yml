@@ -65,5 +65,5 @@ jobs:
         uses: justinhancock77/nowsecure-action/create-issues@main
         timeout-minutes: 5
         with:
-          report_id: 99873c1b-11ca-4c4a-9f15-3231317a382a
+          report_id: ca4c5194-f8c1-11ec-aed0-1f91b1d9b6d6
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

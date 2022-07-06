@@ -24,7 +24,7 @@ export async function run() {
 
   console.log("report data:", report.data);
 
-  if (report.data.auto.assessments[0].report) {
+  if (report.data) {
     console.log("we have a report", report.data.auto.assessments[0].report);
   }
 
