@@ -16,6 +16,11 @@ const sleep = promisify(setTimeout);
 // WITHOUT duplicating issues on each run.  Need to use the hash / something
 // unique to determine whether the GH issue exists already
 export async function run() {
+  const octokit = new Octokit({
+    auth: core.getInput("GITHUB_TOKEN"),
+  });
+  console.log("octokit loaded");
+
   const apiUrl = core.getInput("api_url");
   const labApiUrl = core.getInput("lab_api_url");
 
@@ -52,11 +57,6 @@ export async function run() {
     "report!!",
     JSON.stringify(report.data.auto.assessments[0].report)
   );
-
-  const octokit = new Octokit({
-    auth: core.getInput("GITHUB_TOKEN"),
-  });
-  console.log("octokit loaded");
 
   // for (var resp of report.data.auto.assessments[0].report.findings) {
   //   console.log("resp", resp);

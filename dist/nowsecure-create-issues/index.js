@@ -59162,6 +59162,10 @@ const sleep = (0, util_1.promisify)(setTimeout);
 // unique to determine whether the GH issue exists already
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
+        const octokit = new action_1.Octokit({
+            auth: core.getInput("GITHUB_TOKEN"),
+        });
+        console.log("octokit loaded");
         const apiUrl = core.getInput("api_url");
         const labApiUrl = core.getInput("lab_api_url");
         const platformToken = core.getInput("token");
@@ -59193,10 +59197,6 @@ function run() {
             }
         }
         console.log("report!!", JSON.stringify(report.data.auto.assessments[0].report));
-        const octokit = new action_1.Octokit({
-            auth: core.getInput("GITHUB_TOKEN"),
-        });
-        console.log("octokit loaded");
         // for (var resp of report.data.auto.assessments[0].report.findings) {
         //   console.log("resp", resp);
         //   // should I break this out into a github-client.ts utility?
