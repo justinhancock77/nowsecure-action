@@ -59178,7 +59178,6 @@ function run() {
             // NOTE: No optional chaining on Node.js 12 in GitHub Actions.
             try {
                 if (report.data.auto.assessments[0].report) {
-                    console.log("found report");
                     break;
                 }
                 else {

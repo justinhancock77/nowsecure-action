@@ -28,21 +28,21 @@ export async function run() {
   // Poll Platform to resolve the report ID to a report.
   // GitHub Actions will handle the timeout for us in the event something goes awry.
   let report = null;
-    for (;;) {
-      console.log("Checking for NowSecure report... ", reportId);
-      report = await ns.pullReport(reportId);
-      // NOTE: No optional chaining on Node.js 12 in GitHub Actions.
-      try {
-        if (report.data.auto.assessments[0].report) {
-          break;
-        } else {
-          await sleep(pollInterval);
-        }
-      } catch (e) {
-        console.error(e);
-        // No report data.
+  for (;;) {
+    console.log("Checking for NowSecure report... ", reportId);
+    report = await ns.pullReport(reportId);
+    // NOTE: No optional chaining on Node.js 12 in GitHub Actions.
+    try {
+      if (report.data.auto.assessments[0].report) {
+        break;
+      } else {
+        await sleep(pollInterval);
       }
+    } catch (e) {
+      console.error(e);
+      // No report data.
     }
+  }
 
   console.log(report.data);
 
