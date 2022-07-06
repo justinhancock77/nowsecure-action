@@ -5,7 +5,7 @@ inputs:
   GITHUB_TOKEN:
     required: true
     description: "GitHub token for creating issues."
-  platform_token:
+  token:
     required: true
     description: "NowSecure Platform token."
   poll_interval_ms:
