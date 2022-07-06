@@ -16,9 +16,9 @@ const sleep = promisify(setTimeout);
 // WITHOUT duplicating issues on each run.  Need to use the hash / something
 // unique to determine whether the GH issue exists already
 export async function run() {
-  const octokit = new Octokit({
-    auth: core.getInput("GITHUB_TOKEN"),
-  });
+  // const octokit = new Octokit({
+  //   auth: core.getInput("GITHUB_TOKEN"),
+  // });
   console.log("octokit loaded");
 
   const apiUrl = core.getInput("api_url");
