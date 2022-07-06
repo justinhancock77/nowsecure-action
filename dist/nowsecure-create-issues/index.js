@@ -58951,6 +58951,167 @@ XRegExp = XRegExp || (function (undef) {
 
 /***/ }),
 
+/***/ 4619:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+/*
+ * Copyright © 2021-2022 NowSecure Inc.
+ *
+ * SPDX-License-Identifier: MIT
+ */
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (receiver, state, value, kind, f) {
+    if (kind === "m") throw new TypeError("Private method is not writable");
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
+    return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
+};
+var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, state, kind, f) {
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
+    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
+};
+var _NowSecure_client, _NowSecure_apiUrl, _NowSecure_labApiUrl;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.NowSecure = exports.DEFAULT_LAB_API_URL = exports.DEFAULT_API_URL = exports.USER_AGENT = void 0;
+const http = __importStar(__nccwpck_require__(9925));
+const nowsecure_version_1 = __nccwpck_require__(1328);
+exports.USER_AGENT = `NowSecure GitHub Action/${nowsecure_version_1.version}`;
+exports.DEFAULT_API_URL = "https://api.nowsecure.com";
+exports.DEFAULT_LAB_API_URL = "https://lab-api.nowsecure.com";
+/**
+ * GraphQL request for Platform.
+ *
+ * NOTE: Must be kept in sync with `PullReportResponse`.
+ */
+const platformGql = (reportId) => `query {
+  auto {
+    assessments(scope:"*" refs:["${reportId.replace(/[^0-9a-z-]/gi, "")}"]) {
+      deputy: _raw(path: "yaap.complete.results[0].deputy.deputy.data[0].results")
+      packageKey
+      taskId
+      applicationRef
+      ref
+      report {
+        findings {
+          kind
+          key
+          title
+          summary
+          affected
+          severity
+          context {
+            fields
+            rows
+          }
+          check {
+            issue {
+              title
+              description
+              impactSummary
+              stepsToReproduce
+              recommendation
+              category
+              cvss
+              codeSamples {
+                syntax
+                caption
+                block
+              }
+              guidanceLinks {
+                caption
+                url
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}`;
+class NowSecure {
+    constructor(platformToken, apiUrl = exports.DEFAULT_API_URL, labApiUrl = exports.DEFAULT_LAB_API_URL) {
+        _NowSecure_client.set(this, void 0);
+        _NowSecure_apiUrl.set(this, void 0);
+        _NowSecure_labApiUrl.set(this, void 0);
+        __classPrivateFieldSet(this, _NowSecure_apiUrl, apiUrl, "f");
+        __classPrivateFieldSet(this, _NowSecure_labApiUrl, labApiUrl, "f");
+        __classPrivateFieldSet(this, _NowSecure_client, new http.HttpClient(exports.USER_AGENT, undefined, {
+            allowRetries: true,
+            maxRetries: 3,
+            headers: {
+                Authorization: `Bearer ${platformToken}`,
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+        }), "f");
+    }
+    /**
+     * Pulls a report from NowSecure. Throws an exception if an error occurs.
+     */
+    pullReport(reportId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const r = yield __classPrivateFieldGet(this, _NowSecure_client, "f").postJson(`${__classPrivateFieldGet(this, _NowSecure_apiUrl, "f")}/graphql`, {
+                operationName: null,
+                variables: {},
+                query: platformGql(reportId),
+            });
+            if (r.statusCode !== 200) {
+                throw new Error(`Report request failed with status ${r.statusCode}`);
+            }
+            return r.result;
+        });
+    }
+    /**
+     * Upload an application binary stream to NowSecure Platform and return job
+     * details. Throws an exception if an error occurs.
+     */
+    submitBin(stream, groupId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const r = yield __classPrivateFieldGet(this, _NowSecure_client, "f").sendStream("POST", `${__classPrivateFieldGet(this, _NowSecure_labApiUrl, "f")}/build/?group=${groupId}`, stream, {});
+            if (r.message.statusCode !== 200) {
+                throw new Error(`Application upload failed with status ${r.message.statusCode}`);
+            }
+            const body = yield r.readBody();
+            return JSON.parse(body);
+        });
+    }
+}
+exports.NowSecure = NowSecure;
+_NowSecure_client = new WeakMap(), _NowSecure_apiUrl = new WeakMap(), _NowSecure_labApiUrl = new WeakMap();
+
+
+/***/ }),
+
 /***/ 1190:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -58992,6 +59153,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.run = void 0;
 const core = __importStar(__nccwpck_require__(2186));
+const nowsecure_client_1 = __nccwpck_require__(4619);
 const action_1 = __nccwpck_require__(1231);
 // need to take the output and iterate over it and create issues,
 // WITHOUT duplicating issues on each run.  Need to use the hash / something
@@ -59000,20 +59162,20 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         const apiUrl = core.getInput("api_url");
         const labApiUrl = core.getInput("lab_api_url");
-        const token = core.getInput("GITHUB_TOKEN");
-        console.log("@@@@@@@@@token", token);
-        // Create a personal access token at https://github.com/settings/tokens/new?scopes=repo
+        const platformToken = core.getInput("token");
+        const reportId = core.getInput("report_id");
+        console.log("fetch report with id", reportId);
+        const ns = new nowsecure_client_1.NowSecure(platformToken, apiUrl, labApiUrl);
+        let report = yield ns.pullReport(reportId);
+        console.log("report data:", report.data);
+        if (report.data.auto.assessments[0].report) {
+            console.log("we have a report", report.data.auto.assessments[0].report);
+        }
         const octokit = new action_1.Octokit({
             auth: core.getInput("GITHUB_TOKEN"),
         });
         console.log("octokit loaded");
-        // Compare: https://docs.github.com/en/rest/reference/users#get-the-authenticated-user
-        // const {
-        //   data: { login },
-        // } = await octokit.rest.users.getAuthenticated();
-        // const { data } = await octokit.request("GET /user", {});
-        // Octokit.js
-        // https://github.com/octokit/core.js#readme
+        // should I break this out into a github-client.ts utility?
         yield octokit.request("POST /repos/{owner}/{repo}/issues", {
             owner: "justinhancock77",
             repo: "nowsecure-action",
@@ -59028,6 +59190,19 @@ function run() {
 }
 exports.run = run;
 run();
+
+
+/***/ }),
+
+/***/ 1328:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.version = void 0;
+// generated by genversion
+exports.version = "1.1.0";
 
 
 /***/ }),
