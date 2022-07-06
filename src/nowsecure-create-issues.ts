@@ -31,9 +31,11 @@ export async function run() {
   for (;;) {
     console.log("Checking for NowSecure report... ", reportId);
     report = await ns.pullReport(reportId);
+    console.log("report?", report);
     // NOTE: No optional chaining on Node.js 12 in GitHub Actions.
     try {
       if (report.data.auto.assessments[0].report) {
+        console.log("found the report");
         break;
       } else {
         console.log("sleep");
@@ -47,21 +49,21 @@ export async function run() {
 
   console.log(report.data);
 
-  const octokit = new Octokit({
-    auth: core.getInput("GITHUB_TOKEN"),
-  });
-  console.log("octokit loaded");
+  // const octokit = new Octokit({
+  //   auth: core.getInput("GITHUB_TOKEN"),
+  // });
+  // console.log("octokit loaded");
 
-  // should I break this out into a github-client.ts utility?
-  await octokit.request("POST /repos/{owner}/{repo}/issues", {
-    owner: "justinhancock77",
-    repo: "nowsecure-action",
-    title: "Found a bug",
-    body: "I'm having a problem with this.",
-    assignees: ["justinhancock77"],
-    // milestone: 1,
-    labels: ["bug"],
-  });
+  // // should I break this out into a github-client.ts utility?
+  // await octokit.request("POST /repos/{owner}/{repo}/issues", {
+  //   owner: "justinhancock77",
+  //   repo: "nowsecure-action",
+  //   title: "Found a bug",
+  //   body: "I'm having a problem with this.",
+  //   assignees: ["justinhancock77"],
+  //   // milestone: 1,
+  //   labels: ["bug"],
+  // });
 
   //console.log("Hello, %s", data);
 }
