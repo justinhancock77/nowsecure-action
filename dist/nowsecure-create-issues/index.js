@@ -1796,7 +1796,7 @@ function run() {
             }
         }
         console.log("report!!", JSON.stringify(report.data.auto.assessments[0].report));
-        for (var resp of report.data.auto.assessments) {
+        for (var resp of report.data.auto.assessments[0].report.findings) {
             console.log("resp", resp);
             console.log("/n");
         }
