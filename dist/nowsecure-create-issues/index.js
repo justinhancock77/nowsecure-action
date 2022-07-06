@@ -59155,6 +59155,8 @@ exports.run = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const nowsecure_client_1 = __nccwpck_require__(4619);
 const action_1 = __nccwpck_require__(1231);
+const util_1 = __nccwpck_require__(3837);
+const sleep = (0, util_1.promisify)(setTimeout);
 // need to take the output and iterate over it and create issues,
 // WITHOUT duplicating issues on each run.  Need to use the hash / something
 // unique to determine whether the GH issue exists already
@@ -59166,12 +59168,29 @@ function run() {
         const reportId = core.getInput("report_id");
         console.log("fetch report with id", reportId);
         const ns = new nowsecure_client_1.NowSecure(platformToken, apiUrl, labApiUrl);
+        let pollInterval = parseInt(core.getInput("poll_interval_ms"), 10);
+        // Poll Platform to resolve the report ID to a report.
+        // GitHub Actions will handle the timeout for us in the event something goes awry.
         let report = null;
-        report = yield ns.pullReport(reportId);
-        console.log("report data:", report);
-        if (report) {
-            console.log("we have a report", report.data.auto.assessments[0].report);
+        for (;;) {
+            console.log("Checking for NowSecure report... ", reportId);
+            report = yield ns.pullReport(reportId);
+            // NOTE: No optional chaining on Node.js 12 in GitHub Actions.
+            try {
+                if (report.data.auto.assessments[0].report) {
+                    console.log("found report");
+                    break;
+                }
+                else {
+                    yield sleep(pollInterval);
+                }
+            }
+            catch (e) {
+                console.error(e);
+                // No report data.
+            }
         }
+        console.log(report.data);
         const octokit = new action_1.Octokit({
             auth: core.getInput("GITHUB_TOKEN"),
         });

@@ -7,6 +7,9 @@
 import * as core from "@actions/core";
 import { NowSecure } from "./nowsecure-client";
 import { Octokit } from "@octokit/action";
+import { promisify } from "util";
+
+const sleep = promisify(setTimeout);
 
 // need to take the output and iterate over it and create issues,
 // WITHOUT duplicating issues on each run.  Need to use the hash / something
@@ -20,14 +23,29 @@ export async function run() {
   console.log("fetch report with id", reportId);
 
   const ns = new NowSecure(platformToken, apiUrl, labApiUrl);
+  let pollInterval = parseInt(core.getInput("poll_interval_ms"), 10);
+
+  // Poll Platform to resolve the report ID to a report.
+  // GitHub Actions will handle the timeout for us in the event something goes awry.
   let report = null;
-  report = await ns.pullReport(reportId);
-
-  console.log("report data:", report);
-
-  if (report) {
-    console.log("we have a report", report.data.auto.assessments[0].report);
+  for (;;) {
+    console.log("Checking for NowSecure report... ", reportId);
+    report = await ns.pullReport(reportId);
+    // NOTE: No optional chaining on Node.js 12 in GitHub Actions.
+    try {
+      if (report.data.auto.assessments[0].report) {
+        console.log("found report");
+        break;
+      } else {
+        await sleep(pollInterval);
+      }
+    } catch (e) {
+      console.error(e);
+      // No report data.
+    }
   }
+
+  console.log(report.data);
 
   const octokit = new Octokit({
     auth: core.getInput("GITHUB_TOKEN"),

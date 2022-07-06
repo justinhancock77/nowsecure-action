@@ -8,6 +8,10 @@ inputs:
   token:
     required: true
     description: "NowSecure Platform token."
+  poll_interval_ms:
+    required: false
+    description: "Interval to poll Platform for application details. Default is once a minute."
+    default: "60000"
   api_url:
     required: false
     description: "NowSecure GraphQL API endpoint."
