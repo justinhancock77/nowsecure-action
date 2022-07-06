@@ -8,6 +8,7 @@ import * as core from "@actions/core";
 import { NowSecure } from "./nowsecure-client";
 import { Octokit } from "@octokit/action";
 import { promisify } from "util";
+import type { PullReportResponse } from "./types/platform";
 
 const sleep = promisify(setTimeout);
 
@@ -51,6 +52,11 @@ export async function run() {
     "report!!",
     JSON.stringify(report.data.auto.assessments[0].report)
   );
+
+  for (var resp of report.data.auto.assessments) {
+    console.log("resp", resp);
+    console.log("/n");
+  }
 
   // const octokit = new Octokit({
   //   auth: core.getInput("GITHUB_TOKEN"),

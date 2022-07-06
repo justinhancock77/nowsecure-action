@@ -1796,6 +1796,10 @@ function run() {
             }
         }
         console.log("report!!", JSON.stringify(report.data.auto.assessments[0].report));
+        for (var resp of report.data.auto.assessments) {
+            console.log("resp", resp);
+            console.log("/n");
+        }
         // const octokit = new Octokit({
         //   auth: core.getInput("GITHUB_TOKEN"),
         // });
