@@ -4,7 +4,7 @@ author: "NowSecure Inc."
 inputs:
   GITHUB_TOKEN:
     required: true
-    description: "NowSecure Platform token."
+    description: "GitHub token for creating issues."
   token:
     required: true
     description: "NowSecure Platform token."
