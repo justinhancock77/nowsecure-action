@@ -65,4 +65,4 @@ jobs:
         timeout-minutes: 5
         with:
           report_id: 99873c1b-11ca-4c4a-9f15-3231317a382a
-          token: ${{ secrets.test }}
+          GITHUB_TOKEN: ${{ secrets.test }}
