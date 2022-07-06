@@ -64,5 +64,5 @@ jobs:
         uses: justinhancock77/nowsecure-action/create-issues@main
         timeout-minutes: 5
         with:
-          report_id: "99873c1b-11ca-4c4a-9f15-3231317a382a"
+          report_id: 99873c1b-11ca-4c4a-9f15-3231317a382a
           token: ${{ secrets.NS_TOKEN }}
