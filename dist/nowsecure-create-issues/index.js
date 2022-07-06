@@ -59019,8 +59019,8 @@ function run() {
             repo: "nowsecure-action",
             title: "Found a bug",
             body: "I'm having a problem with this.",
-            assignees: ["octocat"],
-            milestone: 1,
+            assignees: ["justinhancock77"],
+            // milestone: 1,
             labels: ["bug"],
         });
         //console.log("Hello, %s", data);
