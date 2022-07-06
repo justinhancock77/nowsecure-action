@@ -5,30 +5,27 @@
  */
 
 import * as core from "@actions/core";
-import fs from "fs";
 import { NowSecure } from "./nowsecure-client";
+import { Octokit } from "@octokit/action";
 
-async function run() {
-  // need to take the output and iterate over it and create issues,
-  // WITHOUT duplicating issues on each run.  Need to use the hash / something
-  // unique to determine whether the GH issue exists already
+// need to take the output and iterate over it and create issues,
+// WITHOUT duplicating issues on each run.  Need to use the hash / something
+// unique to determine whether the GH issue exists already
+export async function run() {
+  const apiUrl = core.getInput("api_url");
+  const labApiUrl = core.getInput("lab_api_url");
 
-  try {
-    const apiUrl = core.getInput("api_url");
-    const labApiUrl = core.getInput("lab_api_url");
-    const platformToken = core.getInput("token");
-    const ns = new NowSecure(platformToken, apiUrl, labApiUrl);
-    const groupId = core.getInput("group_id");
-    const appFile = core.getInput("app_file");
+  // Create a personal access token at https://github.com/settings/tokens/new?scopes=repo
+  const octokit = new Octokit({
+    auth: core.getInput("token"),
+  });
+  console.log("octokit", octokit);
 
-    const details = await ns.submitBin(fs.createReadStream(appFile), groupId);
-    const reportId = details.ref;
-    console.log(`NowSecure assessment started. Report ID: ${reportId}`);
-    core.setOutput("report_id", reportId);
-  } catch (e) {
-    console.error(e);
-    core.setFailed((e as Error).message);
-  }
+  // Compare: https://docs.github.com/en/rest/reference/users#get-the-authenticated-user
+  const {
+    data: { login },
+  } = await octokit.rest.users.getAuthenticated();
+  console.log("Hello, %s", login);
 }
 
 run();
