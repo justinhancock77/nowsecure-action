@@ -2,7 +2,7 @@ name: "NowSecure: Create Issues"
 description: "Create GitHub issues after NowSecure analysis"
 author: "NowSecure Inc."
 inputs:
-  github-token:
+  GITHUB_TOKEN:
     required: true
     description: "GitHub token for creating issues."
   platform-token:

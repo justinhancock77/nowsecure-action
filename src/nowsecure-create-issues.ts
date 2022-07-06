@@ -17,7 +17,7 @@ const sleep = promisify(setTimeout);
 // unique to determine whether the GH issue exists already
 export async function run() {
   const octokit = new Octokit({
-    auth: core.getInput("github-token"),
+    auth: core.getInput("GITHUB_TOKEN"),
   });
   console.log("octokit loaded");
 

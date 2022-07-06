@@ -59163,7 +59163,7 @@ const sleep = (0, util_1.promisify)(setTimeout);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         const octokit = new action_1.Octokit({
-            auth: core.getInput("github-token"),
+            auth: core.getInput("GITHUB_TOKEN"),
         });
         console.log("octokit loaded");
         const apiUrl = core.getInput("api_url");
