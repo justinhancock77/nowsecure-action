@@ -20,6 +20,9 @@ inputs:
     required: false
     description: "Enable creation of GitHub Issues."
     default: true
+  report_id:
+    required: false
+    description: "The Report ID to create issues from."
 runs:
   using: "node16"
   main: "../dist/nowsecure-create-issues/index.js"
