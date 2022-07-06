@@ -59196,20 +59196,23 @@ function run() {
                 // No report data.
             }
         }
-        console.log("report!!", JSON.stringify(report.data.auto.assessments[0].report));
-        // for (var resp of report.data.auto.assessments[0].report.findings) {
-        //   console.log("resp", resp);
-        //   // should I break this out into a github-client.ts utility?
-        //   await octokit.request("POST /repos/{owner}/{repo}/issues", {
-        //     owner: "justinhancock77",
-        //     repo: "nowsecure-action",
-        //     title: resp.title,
-        //     body: resp.summary,
-        //     assignees: ["justinhancock77"],
-        //     // milestone: 1,
-        //     labels: ["bug"],
-        //   });
-        // }
+        // console.log(
+        //   "report!!",
+        //   JSON.stringify(report.data.auto.assessments[0].report)
+        // );
+        for (var resp of report.data.auto.assessments[0].report.findings) {
+            console.log("resp", resp);
+            // should I break this out into a github-client.ts utility?
+            yield octokit.request("POST /repos/{owner}/{repo}/issues", {
+                owner: "justinhancock77",
+                repo: "nowsecure-action",
+                title: resp.title,
+                body: resp.summary,
+                assignees: ["justinhancock77"],
+                // milestone: 1,
+                labels: ["bug"],
+            });
+        }
         //console.log("Hello, %s", data);
     });
 }
