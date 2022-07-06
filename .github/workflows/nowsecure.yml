@@ -65,6 +65,6 @@ jobs:
         uses: justinhancock77/nowsecure-action/create-issues@main
         timeout-minutes: 5
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          token: ${{ secrets.NS_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          platform-token: ${{ secrets.NS_TOKEN }}
           report_id: ca4c5194-f8c1-11ec-aed0-1f91b1d9b6d6

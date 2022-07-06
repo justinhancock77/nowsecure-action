@@ -2,10 +2,10 @@ name: "NowSecure: Create Issues"
 description: "Create GitHub issues after NowSecure analysis"
 author: "NowSecure Inc."
 inputs:
-  GITHUB_TOKEN:
+  github-token:
     required: true
     description: "GitHub token for creating issues."
-  token:
+  platform-token:
     required: true
     description: "NowSecure Platform token."
   poll_interval_ms:

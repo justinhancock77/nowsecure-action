@@ -59163,12 +59163,12 @@ const sleep = (0, util_1.promisify)(setTimeout);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         const octokit = new action_1.Octokit({
-            auth: core.getInput("GITHUB_TOKEN"),
+            auth: core.getInput("github-token"),
         });
         console.log("octokit loaded");
         const apiUrl = core.getInput("api_url");
         const labApiUrl = core.getInput("lab_api_url");
-        const platformToken = core.getInput("token");
+        const platformToken = core.getInput("platform_token");
         const reportId = core.getInput("report_id");
         console.log("fetch report with id", reportId);
         const ns = new nowsecure_client_1.NowSecure(platformToken, apiUrl, labApiUrl);

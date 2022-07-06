@@ -17,14 +17,14 @@ const sleep = promisify(setTimeout);
 // unique to determine whether the GH issue exists already
 export async function run() {
   const octokit = new Octokit({
-    auth: core.getInput("GITHUB_TOKEN"),
+    auth: core.getInput("github-token"),
   });
   console.log("octokit loaded");
 
   const apiUrl = core.getInput("api_url");
   const labApiUrl = core.getInput("lab_api_url");
 
-  const platformToken = core.getInput("token");
+  const platformToken = core.getInput("platform_token");
   const reportId = core.getInput("report_id");
   console.log("fetch report with id", reportId);
 
