@@ -23,7 +23,7 @@ export async function run() {
   console.log("fetch report with id", reportId);
 
   const ns = new NowSecure(platformToken, apiUrl, labApiUrl);
-  let pollInterval = parseInt("60000");
+  let pollInterval = 60000;
 
   // Poll Platform to resolve the report ID to a report.
   // GitHub Actions will handle the timeout for us in the event something goes awry.
@@ -36,6 +36,7 @@ export async function run() {
       if (report.data.auto.assessments[0].report) {
         break;
       } else {
+        console.log("sleep");
         await sleep(pollInterval);
       }
     } catch (e) {

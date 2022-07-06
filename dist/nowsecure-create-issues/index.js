@@ -59168,7 +59168,7 @@ function run() {
         const reportId = core.getInput("report_id");
         console.log("fetch report with id", reportId);
         const ns = new nowsecure_client_1.NowSecure(platformToken, apiUrl, labApiUrl);
-        let pollInterval = parseInt("60000");
+        let pollInterval = 60000;
         // Poll Platform to resolve the report ID to a report.
         // GitHub Actions will handle the timeout for us in the event something goes awry.
         let report = null;
@@ -59181,6 +59181,7 @@ function run() {
                     break;
                 }
                 else {
+                    console.log("sleep");
                     yield sleep(pollInterval);
                 }
             }
