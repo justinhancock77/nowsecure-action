@@ -59168,7 +59168,7 @@ function run() {
         console.log("octokit loaded");
         const apiUrl = core.getInput("api_url");
         const labApiUrl = core.getInput("lab_api_url");
-        const platformToken = core.getInput("token");
+        const platformToken = core.getInput("platform_token");
         const reportId = core.getInput("report_id");
         console.log("fetch report with id", reportId);
         const ns = new nowsecure_client_1.NowSecure(platformToken, apiUrl, labApiUrl);
