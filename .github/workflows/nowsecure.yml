@@ -67,4 +67,4 @@ jobs:
         with:
           # token: ${{ secrets.NS_TOKEN }}
           report_id: ca4c5194-f8c1-11ec-aed0-1f91b1d9b6d6
-          # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
