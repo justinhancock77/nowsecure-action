@@ -21,7 +21,8 @@ export async function run() {
   const octokit = new Octokit({
     auth: core.getInput("GITHUB_TOKEN"),
   });
-  console.log("octokit", octokit);
+  console.log("octokit loaded");
+  console.log("something", octokit.auth.toString);
 
   // Compare: https://docs.github.com/en/rest/reference/users#get-the-authenticated-user
   // const {
