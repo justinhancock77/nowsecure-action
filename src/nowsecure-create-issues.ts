@@ -14,6 +14,8 @@ import { Octokit } from "@octokit/action";
 export async function run() {
   const apiUrl = core.getInput("api_url");
   const labApiUrl = core.getInput("lab_api_url");
+  const token = core.getInput("token");
+  console.log("token", token);
 
   // Create a personal access token at https://github.com/settings/tokens/new?scopes=repo
   const octokit = new Octokit({
