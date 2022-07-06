@@ -47,7 +47,7 @@ export async function run() {
     }
   }
 
-  console.log(report.data);
+  console.log("report!!", JSON.stringify(report.data));
 
   // const octokit = new Octokit({
   //   auth: core.getInput("GITHUB_TOKEN"),
