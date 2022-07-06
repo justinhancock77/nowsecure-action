@@ -59163,7 +59163,7 @@ const sleep = (0, util_1.promisify)(setTimeout);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         // check to see if enable_issues is true
-        if (core.getInput("enable_issues")) {
+        if (core.getInput("create_issues")) {
             const octokit = new action_1.Octokit({
                 auth: core.getInput("GITHUB_TOKEN"),
             });

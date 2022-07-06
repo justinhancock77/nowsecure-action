@@ -17,7 +17,7 @@ const sleep = promisify(setTimeout);
 // unique to determine whether the GH issue exists already
 export async function run() {
   // check to see if enable_issues is true
-  if (core.getInput("enable_issues")) {
+  if (core.getInput("create_issues")) {
     const octokit = new Octokit({
       auth: core.getInput("GITHUB_TOKEN"),
     });
