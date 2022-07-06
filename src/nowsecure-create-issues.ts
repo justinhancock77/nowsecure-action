@@ -14,20 +14,22 @@ import { Octokit } from "@octokit/action";
 export async function run() {
   const apiUrl = core.getInput("api_url");
   const labApiUrl = core.getInput("lab_api_url");
-  const token = core.getInput("token");
-  console.log("token", token);
+  const token = core.getInput("GITHUB_TOKEN");
+  console.log("@@@@@@@@@token", token);
 
   // Create a personal access token at https://github.com/settings/tokens/new?scopes=repo
   const octokit = new Octokit({
-    auth: core.getInput("token"),
+    auth: core.getInput("GITHUB_TOKEN"),
   });
   console.log("octokit", octokit);
 
   // Compare: https://docs.github.com/en/rest/reference/users#get-the-authenticated-user
-  const {
-    data: { login },
-  } = await octokit.rest.users.getAuthenticated();
-  console.log("Hello, %s", login);
+  // const {
+  //   data: { login },
+  // } = await octokit.rest.users.getAuthenticated();
+
+  const { data } = await octokit.request("/user");
+  console.log("Hello, %s", data);
 }
 
 run();
