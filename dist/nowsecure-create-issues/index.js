@@ -1795,7 +1795,7 @@ function run() {
                 // No report data.
             }
         }
-        console.log("report!!", JSON.stringify(report.data));
+        console.log("report!!", JSON.stringify(report.data.auto.assessments[0].report));
         // const octokit = new Octokit({
         //   auth: core.getInput("GITHUB_TOKEN"),
         // });
