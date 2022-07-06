@@ -24,7 +24,7 @@ export async function run() {
   const apiUrl = core.getInput("api_url");
   const labApiUrl = core.getInput("lab_api_url");
 
-  const platformToken = core.getInput("platform_token");
+  const platformToken = core.getInput("platform-token");
   const reportId = core.getInput("report_id");
   console.log("fetch report with id", reportId);
 
