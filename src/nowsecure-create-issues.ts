@@ -53,27 +53,25 @@ export async function run() {
     JSON.stringify(report.data.auto.assessments[0].report)
   );
 
-  if (report.data.auto.assessments[0].report.findings) {
-    const octokit = new Octokit({
-      auth: core.getInput("GITHUB_TOKEN"),
-    });
-    console.log("octokit loaded");
+  const octokit = new Octokit({
+    auth: core.getInput("GITHUB_TOKEN"),
+  });
+  console.log("octokit loaded");
 
-    for (var resp of report.data.auto.assessments[0].report.findings) {
-      console.log("resp", resp);
-      // should I break this out into a github-client.ts utility?
-      await octokit.request("POST /repos/{owner}/{repo}/issues", {
-        owner: "justinhancock77",
-        repo: "nowsecure-action",
-        title: resp.title,
-        body: resp.summary,
-        assignees: ["justinhancock77"],
-        // milestone: 1,
-        labels: ["bug"],
-      });
-    }
-    //console.log("Hello, %s", data);
+  for (var resp of report.data.auto.assessments[0].report.findings) {
+    console.log("resp", resp);
+    // should I break this out into a github-client.ts utility?
+    await octokit.request("POST /repos/{owner}/{repo}/issues", {
+      owner: "justinhancock77",
+      repo: "nowsecure-action",
+      title: resp.title,
+      body: resp.summary,
+      assignees: ["justinhancock77"],
+      // milestone: 1,
+      labels: ["bug"],
+    });
   }
+  //console.log("Hello, %s", data);
 }
 
 run();
