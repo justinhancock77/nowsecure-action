@@ -20,7 +20,7 @@ export async function run() {
   console.log("fetch report with id", reportId);
 
   const ns = new NowSecure(platformToken, apiUrl, labApiUrl);
-  let report;
+  let report = null;
   report = await ns.pullReport(reportId);
 
   console.log("report data:", report);

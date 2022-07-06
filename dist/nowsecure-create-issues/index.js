@@ -59166,7 +59166,7 @@ function run() {
         const reportId = core.getInput("report_id");
         console.log("fetch report with id", reportId);
         const ns = new nowsecure_client_1.NowSecure(platformToken, apiUrl, labApiUrl);
-        let report;
+        let report = null;
         report = yield ns.pullReport(reportId);
         console.log("report data:", report);
         if (report) {
