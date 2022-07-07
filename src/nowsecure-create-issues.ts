@@ -8,7 +8,6 @@ import * as core from "@actions/core";
 import { NowSecure } from "./nowsecure-client";
 import { Octokit } from "@octokit/action";
 import { promisify } from "util";
-import type { PullReportResponse } from "./types/platform";
 
 const sleep = promisify(setTimeout);
 
@@ -29,6 +28,10 @@ export async function run() {
     const platformToken = core.getInput("platform-token");
     const reportId = core.getInput("report_id");
     console.log("fetch report with id", reportId);
+
+    const assignees = core.getInput("assignees");
+    const repo = core.getInput("repo");
+    const repo_owner = core.getInput("repo_owner");
 
     const ns = new NowSecure(platformToken, apiUrl, labApiUrl);
     let pollInterval = 60000;
@@ -58,12 +61,14 @@ export async function run() {
     for (var resp of report.data.auto.assessments[0].report.findings) {
       console.log("resp", resp);
       // should we break this out into a github-client.ts utility?
+      // put all of this into properties.  Doesn't work in a different repo
+      // due to permissions issues!
       await octokit.request("POST /repos/{owner}/{repo}/issues", {
-        owner: "justinhancock77",
-        repo: "nowsecure-action",
+        owner: repo_owner,
+        repo: repo,
         title: resp.title,
         body: resp.summary,
-        assignees: ["justinhancock77"],
+        assignees: [assignees],
         // milestone: 1,
         labels: ["bug"], // enum here
       });

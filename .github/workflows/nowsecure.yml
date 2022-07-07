@@ -73,3 +73,6 @@ jobs:
           report_id: ${{ needs.scan.outputs.report_id }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           platform-token: ${{ secrets.NS_TOKEN }}
+          repo: "nowsecure-action"
+          repo_owner: "justinhancock77"
+          assignees: "justinhancock77"

@@ -30,6 +30,15 @@ inputs:
   report_id:
     required: false
     description: "The Report ID to create issues from."
+  repo:
+    required: true
+    description: The GitHub Repository to create issues Inc."
+  repo_owner:
+    required: true
+    description: "The owner of the GitHub Repository."
+  assignees:
+    required: true
+    description: "The assignees for newly created issues."
 runs:
   using: "node16"
   main: "../dist/nowsecure-create-issues/index.js"
