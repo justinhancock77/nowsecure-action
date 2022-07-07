@@ -48,7 +48,7 @@ jobs:
         shell: bash
       - id: pull_report
         uses: justinhancock77/nowsecure-action/convert-sarif@main
-        timeout-minutes: 15
+        timeout-minutes: 30
         with:
           report_id: ${{ needs.scan.outputs.report_id }}
           token: ${{ secrets.NS_TOKEN }}
@@ -68,7 +68,7 @@ jobs:
 
       - id: createIssues
         uses: justinhancock77/nowsecure-action/create-issues@main
-        timeout-minutes: 5
+        timeout-minutes: 30
         with:
           report_id: ${{ needs.scan.outputs.report_id }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
