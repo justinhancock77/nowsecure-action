@@ -22,18 +22,18 @@ export async function run() {
     });
     console.log("octokit loaded");
 
-    // check to see if we are a GHAS user
-    const ghas = await octokit.request(
-      "GET /orgs/{org}/settings/billing/advanced-security",
-      {
-        org: "justinaxe77",
-      }
-    );
+    // // check to see if we are a GHAS user
+    // const ghas = await octokit.request(
+    //   "GET /orgs/{org}/settings/billing/advanced-security",
+    //   {
+    //     org: "justinaxe77",
+    //   }
+    // );
 
-    console.log(
-      "GHAS ?",
-      ghas.data.total_advanced_security_committers > 0 ? "YES" : "NO"
-    );
+    // console.log(
+    //   "GHAS ?",
+    //   ghas.data.total_advanced_security_committers > 0 ? "YES" : "NO"
+    // );
 
     const apiUrl = core.getInput("api_url");
     const labApiUrl = core.getInput("lab_api_url");
