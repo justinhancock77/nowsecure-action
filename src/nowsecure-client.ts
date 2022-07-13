@@ -133,4 +133,9 @@ export class NowSecure {
     const body = await r.readBody();
     return JSON.parse(body);
   }
+
+  async getIssue(issueId: String) {
+    // use graphql to do a lookup and see if this
+    // issue already exists.
+  }
 }

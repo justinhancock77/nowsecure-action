@@ -9808,6 +9808,12 @@ class NowSecure {
             return JSON.parse(body);
         });
     }
+    getIssue(issueId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // use graphql to do a lookup and see if this
+            // issue already exists.
+        });
+    }
 }
 exports.NowSecure = NowSecure;
 _NowSecure_client = new WeakMap(), _NowSecure_apiUrl = new WeakMap(), _NowSecure_labApiUrl = new WeakMap();

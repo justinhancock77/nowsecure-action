@@ -28,10 +28,6 @@ inputs:
   enable_sarif:
     required: false
     description: "Enable creation of a SARIF file."
-    default: false
-  create_issues:
-    required: false
-    description: "Enable creation of GitHub Issues."
     default: true
   enable_dependencies:
     required: false

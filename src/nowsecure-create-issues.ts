@@ -22,6 +22,19 @@ export async function run() {
     });
     console.log("octokit loaded");
 
+    // check to see if we are a GHAS user
+    const ghas = await octokit.request(
+      "GET /orgs/{org}/settings/billing/advanced-security",
+      {
+        org: "justinaxe77",
+      }
+    );
+
+    console.log(
+      "GHAS ?",
+      ghas.data.total_advanced_security_committers > 0 ? "YES" : "NO"
+    );
+
     const apiUrl = core.getInput("api_url");
     const labApiUrl = core.getInput("lab_api_url");
 
@@ -49,7 +62,6 @@ export async function run() {
           console.log("report found");
           break;
         } else {
-          console.log("sleep");
           await sleep(pollInterval);
         }
       } catch (e) {
@@ -60,17 +72,13 @@ export async function run() {
 
     for (var resp of report.data.auto.assessments[0].report.findings) {
       console.log("resp", resp);
-      // should we break this out into a github-client.ts utility?
-      // put all of this into properties.  Doesn't work in a different repo
-      // due to permissions issues!
       await octokit.request("POST /repos/{owner}/{repo}/issues", {
         owner: repo_owner,
         repo: repo,
         title: resp.title,
         body: resp.summary,
         assignees: [assignees],
-        // milestone: 1,
-        labels: ["bug"], // enum here
+        labels: ["bug"],
       });
     }
   }
