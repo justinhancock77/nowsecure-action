@@ -70,8 +70,9 @@ export async function run() {
       }
     }
 
+    console.log("findings:", report.data.auto.assessments[0].report.findings);
     for (var resp of report.data.auto.assessments[0].report.findings) {
-      console.log("resp", resp);
+      //console.log("resp", resp);
       await octokit.request("POST /repos/{owner}/{repo}/issues", {
         owner: repo_owner,
         repo: repo,

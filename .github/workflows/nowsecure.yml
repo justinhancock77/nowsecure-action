@@ -54,25 +54,25 @@ jobs:
           token: ${{ secrets.NS_TOKEN }}
           group_id: "99873c1b-11ca-4c4a-9f15-3231317a382a"
 
-  issues:
-    if: ${{ needs.scan.outputs.report_id }}
-    runs-on: ubuntu-latest
-    environment:
-      name: nowsecure-action-test-env
-    # permissions needed for issue creation
-    permissions: write-all
-    needs: scan
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+  # issues:
+  #   if: ${{ needs.scan.outputs.report_id }}
+  #   runs-on: ubuntu-latest
+  #   environment:
+  #     name: nowsecure-action-test-env
+  #   # permissions needed for issue creation
+  #   permissions: write-all
+  #   needs: scan
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v2
 
-      - id: createIssues
-        uses: justinhancock77/nowsecure-action/create-issues@main
-        timeout-minutes: 30
-        with:
-          report_id: ${{ needs.scan.outputs.report_id }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          platform-token: ${{ secrets.NS_TOKEN }}
-          repo: "nowsecure-action"
-          repo_owner: "justinhancock77"
-          assignees: "justinhancock77"
+  #     - id: createIssues
+  #       uses: justinhancock77/nowsecure-action/create-issues@main
+  #       timeout-minutes: 30
+  #       with:
+  #         report_id: ${{ needs.scan.outputs.report_id }}
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #         platform-token: ${{ secrets.NS_TOKEN }}
+  #         repo: "nowsecure-action"
+  #         repo_owner: "justinhancock77"
+  #         assignees: "justinhancock77"
