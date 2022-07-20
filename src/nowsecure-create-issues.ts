@@ -62,9 +62,11 @@ export async function run() {
       owner: repo_owner,
       repo: repo,
     });
+    console.log("existing issues?", existing.data ? "YES" : "NO");
 
-    console.log("findings:", report.data.auto.assessments[0].report.findings);
+    //console.log("findings:", report.data.auto.assessments[0].report.findings);
     if (existing) {
+      console.log("existing issue found");
       for (var finding of report.data.auto.assessments[0].report.findings) {
         //console.log("resp", resp);
         for (var ex of existing.data) {
