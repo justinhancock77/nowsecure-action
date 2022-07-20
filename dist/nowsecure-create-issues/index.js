@@ -59217,6 +59217,7 @@ function run() {
                 for (var finding of report.data.auto.assessments[0].report.findings) {
                     //console.log("resp", resp);
                     for (var ex of existing.data) {
+                        console.log("ex", JSON.stringify(ex));
                         if (ex.title === finding.title) {
                             // the issue already exists, check status
                             console.log("titles match");
