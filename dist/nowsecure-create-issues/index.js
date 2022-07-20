@@ -59209,6 +59209,7 @@ function run() {
             const existing = yield octokit.request("GET /repos/{owner}/{repo}/issues", {
                 owner: repo_owner,
                 repo: repo,
+                state: "all",
             });
             console.log("existing issues?", JSON.stringify(existing));
             //console.log("findings:", report.data.auto.assessments[0].report.findings);
