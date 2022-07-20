@@ -70,14 +70,26 @@ export async function run() {
         for (var ex of existing.data) {
           if (ex.title === finding.title) {
             // the issue already exists, check status
+            console.log("titles match");
             if (
               ex.state !== finding.check.issue.category &&
               ex.state === "closed"
             ) {
               // re-open the GH Issue (regression)
+              console.log("re-open the ticket", ex.id);
+              await octokit.request(
+                "PATCH /repos/{owner}/{repo}/issues/{issue_number}",
+                {
+                  owner: "OWNER",
+                  repo: "REPO",
+                  issue_number: ex.id,
+                  state: "open",
+                }
+              );
             }
           } else {
             // create a new GH Issue
+            console.log("create a new issue!");
             await octokit.request("POST /repos/{owner}/{repo}/issues", {
               owner: repo_owner,
               repo: repo,
