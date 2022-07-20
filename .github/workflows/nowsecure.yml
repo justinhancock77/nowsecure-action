@@ -10,69 +10,70 @@ on:
       - "*"
 
 jobs:
-  scan:
-    runs-on: ubuntu-latest
-    outputs:
-      report_id: ${{ steps.uploadAndScan.outputs.report_id }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Install ripgrep
-        run: sudo apt-get install -y ripgrep
-
-      - name: Get BitBar APK
-        run: |
-          curl -L \
-          https://github.com/bitbar/test-samples/raw/master/apps/android/bitbar-sample-app.apk \
-          -o app.apk
-
-      - id: uploadAndScan
-        uses: justinhancock77/nowsecure-action/upload-app@main
-        timeout-minutes: 20
-        with:
-          token: ${{ secrets.NS_TOKEN }}
-          app_file: app.apk
-          group_id: "99873c1b-11ca-4c4a-9f15-3231317a382a"
-
-  pullreport:
-    if: ${{ needs.scan.outputs.report_id }}
-    runs-on: ubuntu-latest
-    environment:
-      name: nowsecure-action-test-env
-    needs: scan
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-      - run: echo "report_id output ${{ needs.scan.outputs.report_id }}"
-        shell: bash
-      - id: pull_report
-        uses: justinhancock77/nowsecure-action/convert-sarif@main
-        timeout-minutes: 30
-        with:
-          report_id: ${{ needs.scan.outputs.report_id }}
-          token: ${{ secrets.NS_TOKEN }}
-          group_id: "99873c1b-11ca-4c4a-9f15-3231317a382a"
-
-  # issues:
-  #   if: ${{ needs.scan.outputs.report_id }}
+  # scan:
   #   runs-on: ubuntu-latest
-  #   environment:
-  #     name: nowsecure-action-test-env
-  #   # permissions needed for issue creation
-  #   permissions: write-all
-  #   needs: scan
+  #   outputs:
+  #     report_id: ${{ steps.uploadAndScan.outputs.report_id }}
   #   steps:
   #     - name: Checkout repository
   #       uses: actions/checkout@v2
 
-  #     - id: createIssues
-  #       uses: justinhancock77/nowsecure-action/create-issues@main
+  #     - name: Install ripgrep
+  #       run: sudo apt-get install -y ripgrep
+
+  #     - name: Get BitBar APK
+  #       run: |
+  #         curl -L \
+  #         https://github.com/bitbar/test-samples/raw/master/apps/android/bitbar-sample-app.apk \
+  #         -o app.apk
+
+  #     - id: uploadAndScan
+  #       uses: justinhancock77/nowsecure-action/upload-app@main
+  #       timeout-minutes: 20
+  #       with:
+  #         token: ${{ secrets.NS_TOKEN }}
+  #         app_file: app.apk
+  #         group_id: "99873c1b-11ca-4c4a-9f15-3231317a382a"
+
+  # pullreport:
+  #   if: ${{ needs.scan.outputs.report_id }}
+  #   runs-on: ubuntu-latest
+  #   environment:
+  #     name: nowsecure-action-test-env
+  #   needs: scan
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v2
+  #     - run: echo "report_id output ${{ needs.scan.outputs.report_id }}"
+  #       shell: bash
+  #     - id: pull_report
+  #       uses: justinhancock77/nowsecure-action/convert-sarif@main
   #       timeout-minutes: 30
   #       with:
   #         report_id: ${{ needs.scan.outputs.report_id }}
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #         platform-token: ${{ secrets.NS_TOKEN }}
-  #         repo: "nowsecure-action"
-  #         repo_owner: "justinhancock77"
-  #         assignees: "justinhancock77"
+  #         token: ${{ secrets.NS_TOKEN }}
+  #         group_id: "99873c1b-11ca-4c4a-9f15-3231317a382a"
+
+  issues:
+    #if: ${{ needs.scan.outputs.report_id }}
+    runs-on: ubuntu-latest
+    environment:
+      name: nowsecure-action-test-env
+    # permissions needed for issue creation
+    permissions: write-all
+    needs: scan
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - id: createIssues
+        uses: justinhancock77/nowsecure-action/create-issues@main
+        timeout-minutes: 30
+        with:
+          #report_id: ${{ needs.scan.outputs.report_id }}
+          report_id: "73a70392-0704-11ed-aed0-0b42ffdf8ea4"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          platform-token: ${{ secrets.NS_TOKEN }}
+          repo: "nowsecure-action"
+          repo_owner: "justinhancock77"
+          assignees: ""

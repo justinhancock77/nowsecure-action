@@ -59174,17 +59174,6 @@ function run() {
                 auth: core.getInput("GITHUB_TOKEN"),
             });
             console.log("octokit loaded");
-            // // check to see if we are a GHAS user
-            // const ghas = await octokit.request(
-            //   "GET /orgs/{org}/settings/billing/advanced-security",
-            //   {
-            //     org: "justinaxe77",
-            //   }
-            // );
-            // console.log(
-            //   "GHAS ?",
-            //   ghas.data.total_advanced_security_committers > 0 ? "YES" : "NO"
-            // );
             const apiUrl = core.getInput("api_url");
             const labApiUrl = core.getInput("lab_api_url");
             const platformToken = core.getInput("platform-token");
@@ -59216,17 +59205,36 @@ function run() {
                     // No report data.
                 }
             }
+            // pull all the issues to use to determine dupes and to re-open issues
+            const existing = yield octokit.request("GET /repos/{owner}/{repo}/issues", {
+                owner: repo_owner,
+                repo: repo,
+            });
             console.log("findings:", report.data.auto.assessments[0].report.findings);
-            for (var resp of report.data.auto.assessments[0].report.findings) {
-                //console.log("resp", resp);
-                yield octokit.request("POST /repos/{owner}/{repo}/issues", {
-                    owner: repo_owner,
-                    repo: repo,
-                    title: resp.title,
-                    body: resp.summary,
-                    assignees: [assignees],
-                    labels: ["bug"],
-                });
+            if (existing) {
+                for (var finding of report.data.auto.assessments[0].report.findings) {
+                    //console.log("resp", resp);
+                    for (var ex of existing.data) {
+                        if (ex.title === finding.title) {
+                            // the issue already exists, check status
+                            if (ex.state !== finding.check.issue.category &&
+                                ex.state === "closed") {
+                                // re-open the GH Issue (regression)
+                            }
+                        }
+                        else {
+                            // create a new GH Issue
+                            yield octokit.request("POST /repos/{owner}/{repo}/issues", {
+                                owner: repo_owner,
+                                repo: repo,
+                                title: finding.title,
+                                body: finding.summary,
+                                assignees: [assignees],
+                                labels: [finding.severity],
+                            });
+                        }
+                    }
+                }
             }
         }
     });
