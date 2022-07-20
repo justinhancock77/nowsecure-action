@@ -59210,13 +59210,13 @@ function run() {
                 owner: repo_owner,
                 repo: repo,
             });
-            console.log("existing issues?", existing.data ? "YES" : "NO");
+            console.log("existing issues?", JSON.stringify(existing));
             //console.log("findings:", report.data.auto.assessments[0].report.findings);
             if (existing) {
                 console.log("existing issue found");
                 for (var finding of report.data.auto.assessments[0].report.findings) {
                     console.log("finding", finding.title);
-                    console.log("existing.data", existing.data);
+                    console.log("existing.data", existing);
                     for (var ex of existing.data) {
                         console.log("ex", JSON.stringify(ex));
                         if (ex.title === finding.title) {
