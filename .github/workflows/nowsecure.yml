@@ -61,7 +61,7 @@ jobs:
       name: nowsecure-action-test-env
     # permissions needed for issue creation
     permissions: write-all
-    needs: scan
+    #needs: scan
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
