@@ -131,14 +131,14 @@ export function buildBody(finding: Finding) {
   let result;
   let issue = finding.check.issue;
   result = "Description:";
-  result.concat("<br/>");
-  result.concat(issue.description);
-  result.concat("<br/>Impact Summary:");
-  result.concat(issue.impactSummary);
-  result.concat("Steps to reproduce:<br/>");
-  result.concat(issue.stepsToReproduce);
-  result.concat("Recommendation:<br/>");
-  result.concat(issue.recommendation);
+  result += "<br/>";
+  result += issue.description;
+  result += "<br/>Impact Summary";
+  result += issue.impactSummary;
+  result += "Steps to reproduce:<br/>";
+  result += issue.stepsToReproduce;
+  result += "Recommendation:<br/>";
+  result += issue.recommendation;
 
   return result;
 }
