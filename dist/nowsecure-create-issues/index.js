@@ -59278,13 +59278,12 @@ function buildBody(finding) {
     let result;
     let issue = finding.check.issue;
     result = "<h3>Description:</h3>";
-    //result += "<br/><br/>";
     result += issue.description;
-    result += "<br/><br/><h3>Impact Summary:</h3>";
+    result += "<h3>Impact Summary:</h3>";
     result += issue.impactSummary;
-    result += "<br/><br/><h3>Steps to reproduce:</h3>";
-    result += issue.stepsToReproduce ? issue.stepsToReproduce : "None.";
-    result += "<br/><br/><h3>Recommendation:</h3>";
+    result += "<h3>Steps to reproduce:</h3>";
+    result += issue.stepsToReproduce ? issue.stepsToReproduce : "N/A";
+    result += "<h3>Recommendation:</h3>";
     result += issue.recommendation;
     return result;
 }
