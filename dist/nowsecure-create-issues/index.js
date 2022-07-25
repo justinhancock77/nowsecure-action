@@ -59157,7 +59157,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.run = void 0;
+exports.buildBody = exports.run = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const nowsecure_client_1 = __nccwpck_require__(4619);
 const action_1 = __nccwpck_require__(1231);
@@ -59222,7 +59222,7 @@ function run() {
                         owner: repo_owner,
                         repo: repo,
                         title: finding.title,
-                        body: finding.summary,
+                        body: buildBody(finding),
                         assignees: [assignees],
                         labels: [finding.severity],
                     });
@@ -59274,6 +59274,20 @@ function run() {
     });
 }
 exports.run = run;
+function buildBody(finding) {
+    let result;
+    let issue = finding.check.issue;
+    result = "Description:/n";
+    result = issue.description;
+    result = result + "/nImpact Summary:";
+    result = result + issue.impactSummary;
+    result = result + "/nSteps to reproduce:/n";
+    result = result + issue.stepsToReproduce;
+    result = result + "/nRecommendation:/n";
+    result = result + issue.recommendation;
+    return result;
+}
+exports.buildBody = buildBody;
 run();
 
 

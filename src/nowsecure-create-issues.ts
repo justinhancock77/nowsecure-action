@@ -8,6 +8,7 @@ import * as core from "@actions/core";
 import { NowSecure } from "./nowsecure-client";
 import { Octokit } from "@octokit/action";
 import { promisify } from "util";
+import { Finding } from "./types/platform";
 
 const sleep = promisify(setTimeout);
 
@@ -75,7 +76,7 @@ export async function run() {
           owner: repo_owner,
           repo: repo,
           title: finding.title,
-          body: finding.summary,
+          body: buildBody(finding),
           assignees: [assignees],
           labels: [finding.severity],
         });
@@ -124,6 +125,21 @@ export async function run() {
       //   }
     }
   }
+}
+
+export function buildBody(finding: Finding) {
+  let result;
+  let issue = finding.check.issue;
+  result = "Description:/n";
+  result = issue.description;
+  result = result + "/nImpact Summary:";
+  result = result + issue.impactSummary;
+  result = result + "/nSteps to reproduce:/n";
+  result = result + issue.stepsToReproduce;
+  result = result + "/nRecommendation:/n";
+  result = result + issue.recommendation;
+
+  return result;
 }
 
 run();
