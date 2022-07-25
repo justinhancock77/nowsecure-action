@@ -130,14 +130,14 @@ export async function run() {
 export function buildBody(finding: Finding) {
   let result;
   let issue = finding.check.issue;
-  result = "<b>Description:</b>";
+  result = "<h2>Description:</h2>";
   result += "<br/><br/>";
   result += issue.description;
-  result += "<br/><br/><b>Impact Summary:</b><br/><br/>";
+  result += "<br/><br/><h2>Impact Summary:</h2><br/><br/>";
   result += issue.impactSummary;
-  result += "<br/><br/><b>Steps to reproduce:</b><br/>";
-  result += issue.stepsToReproduce ? issue.stepsToReproduce : "N/A";
-  result += "<br/><br/><b>Recommendation:</b><br/><br/>";
+  result += "<br/><br/><h2>Steps to reproduce:</h2><br/>";
+  result += issue.stepsToReproduce ? issue.stepsToReproduce : "None.";
+  result += "<br/><br/><h2>Recommendation:</h2><br/><br/>";
   result += issue.recommendation;
 
   return result;
