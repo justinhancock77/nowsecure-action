@@ -59226,49 +59226,50 @@ function run() {
                         assignees: [assignees],
                         labels: [finding.severity],
                     });
-                    break; // temp
                 }
-                // } else {
-                //   console.log("existing issue found");
-                //   for (var finding of report.data.auto.assessments[0].report.findings) {
-                //     console.log("finding", finding.title);
-                //     console.log("existing.data", existing);
-                //     for (var ex of existing.data) {
-                //       console.log("ex", JSON.stringify(ex));
-                //       if (ex.title === finding.title) {
-                //         // the issue already exists, check status
-                //         console.log("titles match");
-                //         if (
-                //           ex.state !== finding.check.issue.category &&
-                //           ex.state === "closed"
-                //         ) {
-                //           // re-open the GH Issue (regression)
-                //           console.log("re-open the ticket", ex.id);
-                //           await octokit.request(
-                //             "PATCH /repos/{owner}/{repo}/issues/{issue_number}",
-                //             {
-                //               owner: "OWNER",
-                //               repo: "REPO",
-                //               issue_number: ex.id,
-                //               state: "open",
-                //             }
-                //           );
-                //           break; // break out of inner since we matched
-                //         }
-                //       } else {
-                //         // create a new GH Issue
-                //         console.log("create a new issue!");
-                //         await octokit.request("POST /repos/{owner}/{repo}/issues", {
-                //           owner: repo_owner,
-                //           repo: repo,
-                //           title: finding.title,
-                //           body: finding.summary,
-                //           assignees: [assignees],
-                //           labels: [finding.severity],
-                //         });
-                //       }
-                //     }
-                //   }
+            }
+            else {
+                console.log("existing issue found");
+                for (var finding of report.data.auto.assessments[0].report.findings) {
+                    console.log("finding", finding.title);
+                    console.log("existing.data", existing);
+                    for (var ex of existing.data) {
+                        console.log("ex", JSON.stringify(ex));
+                        break;
+                        // if (ex.title === finding.title) {
+                        //   // the issue already exists, check status
+                        //   console.log("titles match");
+                        //   if (
+                        //     ex.state !== finding.check.issue.category &&
+                        //     ex.state === "closed"
+                        //   ) {
+                        //     // re-open the GH Issue (regression)
+                        //     console.log("re-open the ticket", ex.id);
+                        //     await octokit.request(
+                        //       "PATCH /repos/{owner}/{repo}/issues/{issue_number}",
+                        //       {
+                        //         owner: "OWNER",
+                        //         repo: "REPO",
+                        //         issue_number: ex.id,
+                        //         state: "open",
+                        //       }
+                        //     );
+                        //     break; // break out of inner since we matched
+                        //   }
+                        // } else {
+                        //   // create a new GH Issue
+                        //   console.log("create a new issue!");
+                        //   await octokit.request("POST /repos/{owner}/{repo}/issues", {
+                        //     owner: repo_owner,
+                        //     repo: repo,
+                        //     title: finding.title,
+                        //     body: finding.summary,
+                        //     assignees: [assignees],
+                        //     labels: [finding.severity],
+                        //   });
+                        // }
+                    }
+                }
             }
         }
     });
