@@ -71,7 +71,7 @@ export async function run() {
       console.log("no existing issues, create new ones!");
       for (var finding of report.data.auto.assessments[0].report.findings) {
         console.log("create a new issue!");
-        console.log("finding", JSON.stringify(finding));
+        //console.log("finding", JSON.stringify(finding));
         await octokit.request("POST /repos/{owner}/{repo}/issues", {
           owner: repo_owner,
           repo: repo,
@@ -84,11 +84,11 @@ export async function run() {
     } else {
       console.log("existing issue found");
       for (var finding of report.data.auto.assessments[0].report.findings) {
-        console.log("finding", finding.title);
-        console.log("existing.data", existing);
+        console.log("finding title", finding.title);
+        //console.log("existing.data", existing);
         for (var ex of existing.data) {
-          console.log("ex", JSON.stringify(ex));
-          break;
+          console.log("ex", JSON.stringify(ex.title));
+
           // if (ex.title === finding.title) {
           //   // the issue already exists, check status
           //   console.log("titles match");
