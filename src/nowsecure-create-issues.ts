@@ -65,8 +65,20 @@ export async function run() {
     });
     console.log("existing issues?", JSON.stringify(existing));
 
-    //console.log("findings:", report.data.auto.assessments[0].report.findings);
-    if (existing) {
+    // there are zero existing issues
+    if (!existing || existing.data.length === 0) {
+      for (var finding of report.data.auto.assessments[0].report.findings) {
+        console.log("create a new issue!");
+        await octokit.request("POST /repos/{owner}/{repo}/issues", {
+          owner: repo_owner,
+          repo: repo,
+          title: finding.title,
+          body: finding.summary,
+          assignees: [assignees],
+          labels: [finding.severity],
+        });
+      }
+    } else {
       console.log("existing issue found");
       for (var finding of report.data.auto.assessments[0].report.findings) {
         console.log("finding", finding.title);
@@ -91,6 +103,7 @@ export async function run() {
                   state: "open",
                 }
               );
+              break; // break out of inner since we matched
             }
           } else {
             // create a new GH Issue
