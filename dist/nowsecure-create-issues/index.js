@@ -59277,14 +59277,15 @@ exports.run = run;
 function buildBody(finding) {
     let result;
     let issue = finding.check.issue;
-    result = "Description:/n";
-    result = issue.description;
-    result = result + "/nImpact Summary:";
-    result = result + issue.impactSummary;
-    result = result + "/nSteps to reproduce:/n";
-    result = result + issue.stepsToReproduce;
-    result = result + "/nRecommendation:/n";
-    result = result + issue.recommendation;
+    result = "Description:";
+    result.concat("<br/>");
+    result.concat(issue.description);
+    result.concat("<br/>Impact Summary:");
+    result.concat(issue.impactSummary);
+    result.concat("Steps to reproduce:<br/>");
+    result.concat(issue.stepsToReproduce);
+    result.concat("Recommendation:<br/>");
+    result.concat(issue.recommendation);
     return result;
 }
 exports.buildBody = buildBody;
