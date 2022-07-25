@@ -131,7 +131,6 @@ export function buildBody(finding: Finding) {
   let result;
   let issue = finding.check.issue;
   result = "<h3>Description:</h3>";
-  
   result += issue.description;
   result += "<h3>Impact Summary:</h3>";
   result += issue.impactSummary;
