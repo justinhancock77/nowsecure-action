@@ -59241,11 +59241,11 @@ function run() {
                             if (ex.state !== finding.check.issue.category &&
                                 ex.state === "closed") {
                                 // re-open the GH Issue (regression)
-                                console.log("re-open the ticket", ex.id);
+                                console.log("re-open the ticket", ex.number);
                                 yield octokit.request("PATCH /repos/{owner}/{repo}/issues/{issue_number}", {
                                     owner: "OWNER",
                                     repo: "REPO",
-                                    issue_number: ex.id,
+                                    issue_number: ex.number,
                                     state: "open",
                                 });
                                 break; // break out of inner since we matched

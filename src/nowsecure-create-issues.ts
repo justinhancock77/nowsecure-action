@@ -97,13 +97,13 @@ export async function run() {
               ex.state === "closed"
             ) {
               // re-open the GH Issue (regression)
-              console.log("re-open the ticket", ex.id);
+              console.log("re-open the ticket", ex.number);
               await octokit.request(
                 "PATCH /repos/{owner}/{repo}/issues/{issue_number}",
                 {
                   owner: "OWNER",
                   repo: "REPO",
-                  issue_number: ex.id,
+                  issue_number: ex.number,
                   state: "open",
                 }
               );
