@@ -59283,7 +59283,7 @@ function buildBody(finding) {
     result += issue.impactSummary;
     result += "<h3>Steps to reproduce:</h3>";
     result += issue.stepsToReproduce ? issue.stepsToReproduce : "N/A";
-    result += "<h3>Recommendation:</h3>";
+    result += "<h3>Recommendations:</h3>";
     result += issue.recommendation;
     return result;
 }
