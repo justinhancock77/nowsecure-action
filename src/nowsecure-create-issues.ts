@@ -136,8 +136,8 @@ export function buildBody(finding: Finding) {
   result += "<br/><br/><b>Impact Summary:</b><br/><br/>";
   result += issue.impactSummary;
   result += "<br/><br/><b>Steps to reproduce:</b><br/>";
-  result += issue.stepsToReproduce;
-  result += "<br/><br/><b>Recommendation:</b><br/>";
+  result += issue.stepsToReproduce ? issue.stepsToReproduce : "N/A";
+  result += "<br/><br/><b>Recommendation:</b><br/><br/>";
   result += issue.recommendation;
 
   return result;
