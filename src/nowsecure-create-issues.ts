@@ -86,7 +86,7 @@ export async function run() {
       for (var finding of report.data.auto.assessments[0].report.findings) {
         let issueToUpdate = issueExists(finding, existing.data);
         console.log("issueToUpdate", issueToUpdate);
-        if (issueToUpdate) {
+        if (await issueToUpdate) {
           // re-open thee issue
           await octokit.request(
             "PATCH /repos/{owner}/{repo}/issues/{issue_number}",
