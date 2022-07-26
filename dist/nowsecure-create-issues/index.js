@@ -59278,7 +59278,7 @@ function issueExists(finding, existing) {
                     break;
                 }
                 else if (ex.state === "open") {
-                    // don't create a dupe ticket
+                    // do NOT create a dupe ticket
                     result = -1;
                     break;
                 }
@@ -59291,7 +59291,6 @@ exports.issueExists = issueExists;
 function buildBody(finding) {
     let result;
     let issue = finding.check.issue;
-    //console.log("issue", JSON.stringify(issue));
     result = "<h3>Description:</h3>";
     result += issue && issue.description ? issue.description : "N/A";
     result += "<h3>Impact Summary:</h3>";

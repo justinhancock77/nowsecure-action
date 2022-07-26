@@ -82,9 +82,6 @@ export async function run() {
     } else if (existing && existing.data) {
       console.log("existing issue found");
       for (var finding of report.data.auto.assessments[0].report.findings) {
-        // use a map
-        type ActiveOrders = { [issueId: string]: { name: string } };
-
         let issueToUpdate = await issueExists(finding, existing.data);
         console.log("issueToUpdate", JSON.stringify(issueToUpdate));
         if (issueToUpdate && issueToUpdate > 0) {
@@ -135,7 +132,7 @@ export async function issueExists(finding: Finding, existing: any) {
         result = ex.number;
         break;
       } else if (ex.state === "open") {
-        // don't create a dupe ticket
+        // do NOT create a dupe ticket
         result = -1;
         break;
       }
@@ -147,7 +144,6 @@ export async function issueExists(finding: Finding, existing: any) {
 export function buildBody(finding: Finding) {
   let result;
   let issue = finding.check.issue;
-  //console.log("issue", JSON.stringify(issue));
   result = "<h3>Description:</h3>";
   result += issue && issue.description ? issue.description : "N/A";
   result += "<h3>Impact Summary:</h3>";
