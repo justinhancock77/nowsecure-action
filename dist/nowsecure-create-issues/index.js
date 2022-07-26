@@ -59273,6 +59273,7 @@ exports.run = run;
 function buildBody(finding) {
     let result;
     let issue = finding.check.issue;
+    console.log("issue", JSON.stringify(issue));
     result = "<h3>Description:</h3>";
     result += issue.description ? issue.description : "N/A";
     result += "<h3>Impact Summary:</h3>";
