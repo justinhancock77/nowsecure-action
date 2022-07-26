@@ -116,7 +116,7 @@ export async function run() {
               owner: repo_owner,
               repo: repo,
               title: finding.title,
-              body: finding.summary,
+              body: buildBody(finding),
               assignees: [assignees],
               labels: [finding.severity],
             });
