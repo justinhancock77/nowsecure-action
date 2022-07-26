@@ -134,7 +134,7 @@ export async function reopenIfExists(
       }
     }
   }
-
+  console.log("RESULT:", result);
   return result;
 }
 

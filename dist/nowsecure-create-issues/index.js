@@ -59272,6 +59272,7 @@ function reopenIfExists(finding, existing, octokit, repo, repo_owner) {
                 }
             }
         }
+        console.log("RESULT:", result);
         return result;
     });
 }
