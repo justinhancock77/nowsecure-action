@@ -59243,8 +59243,8 @@ function run() {
                                 // re-open the GH Issue (regression)
                                 console.log("re-open the ticket", ex.number);
                                 yield octokit.request("PATCH /repos/{owner}/{repo}/issues/{issue_number}", {
-                                    owner: "OWNER",
-                                    repo: "REPO",
+                                    owner: repo_owner,
+                                    repo: repo,
                                     issue_number: ex.number,
                                     state: "open",
                                 });

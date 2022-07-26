@@ -101,8 +101,8 @@ export async function run() {
               await octokit.request(
                 "PATCH /repos/{owner}/{repo}/issues/{issue_number}",
                 {
-                  owner: "OWNER",
-                  repo: "REPO",
+                  owner: repo_owner,
+                  repo: repo,
                   issue_number: ex.number,
                   state: "open",
                 }
