@@ -105,7 +105,7 @@ export async function run() {
   }
 }
 
-export async function reopenIfExists(
+export function reopenIfExists(
   finding: Finding,
   existing: any,
   octokit: Octokit,
@@ -121,16 +121,14 @@ export async function reopenIfExists(
         // re-open the GH Issue (regression)
         result = true;
         console.log("re-open the ticket", ex.number);
-        await octokit.request(
-          "PATCH /repos/{owner}/{repo}/issues/{issue_number}",
-          {
-            owner: repo_owner,
-            repo: repo,
-            issue_number: ex.number,
-            state: "open",
-          }
-        );
-        break; // break out of inner since we matched
+        octokit.request("PATCH /repos/{owner}/{repo}/issues/{issue_number}", {
+          owner: repo_owner,
+          repo: repo,
+          issue_number: ex.number,
+          state: "open",
+        });
+
+        //break; // break out of inner since we matched
       }
     }
   }
