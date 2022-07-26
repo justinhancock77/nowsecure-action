@@ -59252,30 +59252,32 @@ function run() {
 }
 exports.run = run;
 function reopenIfExists(finding, existing, octokit, repo, repo_owner) {
-    let result = false;
-    for (var ex of existing) {
-        if (ex.title === finding.title) {
-            // the issue already exists, check status
-            console.log("@@@@@@ Titles Match!! /n");
-            if (ex.state &&
-                finding.check.issue &&
-                ex.state !== finding.check.issue.category &&
-                ex.state === "closed") {
-                // re-open the GH Issue (regression)
-                result = true;
-                console.log("re-open the ticket", ex.number);
-                octokit.request("PATCH /repos/{owner}/{repo}/issues/{issue_number}", {
-                    owner: repo_owner,
-                    repo: repo,
-                    issue_number: ex.number,
-                    state: "open",
-                });
-                //break; // break out of inner since we matched
+    return __awaiter(this, void 0, void 0, function* () {
+        let result = false;
+        for (var ex of existing) {
+            if (ex.title === finding.title) {
+                // the issue already exists, check status
+                console.log("@@@@@@ Titles Match!! /n");
+                if (ex.state &&
+                    finding.check.issue &&
+                    ex.state !== finding.check.issue.category &&
+                    ex.state === "closed") {
+                    // re-open the GH Issue (regression)
+                    result = true;
+                    console.log("re-open the ticket", ex.number);
+                    yield octokit.request("PATCH /repos/{owner}/{repo}/issues/{issue_number}", {
+                        owner: repo_owner,
+                        repo: repo,
+                        issue_number: ex.number,
+                        state: "open",
+                    });
+                    break; // break out of inner since we matched
+                }
             }
         }
-    }
-    console.log("RESULT:", result);
-    return result;
+        console.log("RESULT:", result);
+        return result;
+    });
 }
 exports.reopenIfExists = reopenIfExists;
 function buildBody(finding) {
