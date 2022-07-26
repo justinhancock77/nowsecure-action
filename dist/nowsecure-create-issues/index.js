@@ -59157,7 +59157,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.buildBody = exports.reopenIfExists = exports.run = void 0;
+exports.buildBody = exports.issueExists = exports.run = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const nowsecure_client_1 = __nccwpck_require__(4619);
 const action_1 = __nccwpck_require__(1231);
@@ -59205,19 +59205,17 @@ function run() {
                     // No report data.
                 }
             }
-            // pull all the issues to use to determine dupes and to re-open issues
+            // pull all the issues we have to determine dupes and to re-open issues
             const existing = yield octokit.request("GET /repos/{owner}/{repo}/issues", {
                 owner: repo_owner,
                 repo: repo,
                 state: "all",
             });
-            //console.log("existing issues?", JSON.stringify(existing));
-            // there are zero existing issues
+            // there are zero existing issues, so create new from findings.
             if (!existing || existing.data.length === 0) {
                 console.log("no existing issues, create new ones!");
                 for (var finding of report.data.auto.assessments[0].report.findings) {
                     console.log("create a new issue!");
-                    //console.log("finding", JSON.stringify(finding));
                     yield octokit.request("POST /repos/{owner}/{repo}/issues", {
                         owner: repo_owner,
                         repo: repo,
@@ -59228,12 +59226,20 @@ function run() {
                     });
                 }
             }
-            else {
+            if (existing && existing.data) {
                 console.log("existing issue found");
                 for (var finding of report.data.auto.assessments[0].report.findings) {
-                    console.log("finding title", finding.title);
-                    //console.log("existing.data", existing);
-                    if (reopenIfExists(finding, existing.data, octokit, repo, repo_owner)) {
+                    let issueToUpdate = issueExists(finding, existing.data);
+                    if (issueToUpdate) {
+                        // re-open thee issue
+                        yield octokit.request("PATCH /repos/{owner}/{repo}/issues/{issue_number}", {
+                            owner: repo_owner,
+                            repo: repo,
+                            issue_number: parseInt(yield issueToUpdate),
+                            state: "open",
+                        });
+                    }
+                    else {
                         // create a new GH Issue
                         console.log("create a new issue!");
                         yield octokit.request("POST /repos/{owner}/{repo}/issues", {
@@ -59251,9 +59257,9 @@ function run() {
     });
 }
 exports.run = run;
-function reopenIfExists(finding, existing, octokit, repo, repo_owner) {
+function issueExists(finding, existing) {
     return __awaiter(this, void 0, void 0, function* () {
-        let result = false;
+        let result;
         for (var ex of existing) {
             if (ex.title === finding.title) {
                 // the issue already exists, check status
@@ -59262,24 +59268,16 @@ function reopenIfExists(finding, existing, octokit, repo, repo_owner) {
                     finding.check.issue &&
                     ex.state !== finding.check.issue.category &&
                     ex.state === "closed") {
-                    // re-open the GH Issue (regression)
-                    result = true;
+                    // pass back the id of the issue to be re-opened
+                    return ex.id;
                     console.log("re-open the ticket", ex.number);
-                    yield octokit.request("PATCH /repos/{owner}/{repo}/issues/{issue_number}", {
-                        owner: repo_owner,
-                        repo: repo,
-                        issue_number: ex.number,
-                        state: "open",
-                    });
-                    break; // break out of inner since we matched
                 }
             }
         }
-        console.log("RESULT:", result);
-        return result;
+        return null;
     });
 }
-exports.reopenIfExists = reopenIfExists;
+exports.issueExists = issueExists;
 function buildBody(finding) {
     let result;
     let issue = finding.check.issue;

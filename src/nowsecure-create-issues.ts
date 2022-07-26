@@ -58,20 +58,18 @@ export async function run() {
       }
     }
 
-    // pull all the issues to use to determine dupes and to re-open issues
+    // pull all the issues we have to determine dupes and to re-open issues
     const existing = await octokit.request("GET /repos/{owner}/{repo}/issues", {
       owner: repo_owner,
       repo: repo,
       state: "all",
     });
-    //console.log("existing issues?", JSON.stringify(existing));
 
-    // there are zero existing issues
+    // there are zero existing issues, so create new from findings.
     if (!existing || existing.data.length === 0) {
       console.log("no existing issues, create new ones!");
       for (var finding of report.data.auto.assessments[0].report.findings) {
         console.log("create a new issue!");
-        //console.log("finding", JSON.stringify(finding));
         await octokit.request("POST /repos/{owner}/{repo}/issues", {
           owner: repo_owner,
           repo: repo,
@@ -81,12 +79,24 @@ export async function run() {
           labels: [finding.severity],
         });
       }
-    } else {
+    }
+
+    if (existing && existing.data) {
       console.log("existing issue found");
       for (var finding of report.data.auto.assessments[0].report.findings) {
-        console.log("finding title", finding.title);
-        //console.log("existing.data", existing);
-        if (reopenIfExists(finding, existing.data, octokit, repo, repo_owner)) {
+        let issueToUpdate = issueExists(finding, existing.data);
+        if (issueToUpdate) {
+          // re-open thee issue
+          await octokit.request(
+            "PATCH /repos/{owner}/{repo}/issues/{issue_number}",
+            {
+              owner: repo_owner,
+              repo: repo,
+              issue_number: parseInt(await issueToUpdate),
+              state: "open",
+            }
+          );
+        } else {
           // create a new GH Issue
           console.log("create a new issue!");
           await octokit.request("POST /repos/{owner}/{repo}/issues", {
@@ -103,14 +113,8 @@ export async function run() {
   }
 }
 
-export async function reopenIfExists(
-  finding: Finding,
-  existing: any,
-  octokit: Octokit,
-  repo: string,
-  repo_owner: string
-) {
-  let result = false;
+export async function issueExists(finding: Finding, existing: any) {
+  let result;
   for (var ex of existing) {
     if (ex.title === finding.title) {
       // the issue already exists, check status
@@ -121,25 +125,13 @@ export async function reopenIfExists(
         ex.state !== finding.check.issue.category &&
         ex.state === "closed"
       ) {
-        // re-open the GH Issue (regression)
-        result = true;
+        // pass back the id of the issue to be re-opened
+        return ex.id;
         console.log("re-open the ticket", ex.number);
-        await octokit.request(
-          "PATCH /repos/{owner}/{repo}/issues/{issue_number}",
-          {
-            owner: repo_owner,
-            repo: repo,
-            issue_number: ex.number,
-            state: "open",
-          }
-        );
-
-        break; // break out of inner since we matched
       }
     }
   }
-  console.log("RESULT:", result);
-  return result;
+  return null;
 }
 
 export function buildBody(finding: Finding) {
