@@ -119,7 +119,8 @@ export function reopenIfExists(
       console.log("@@@@@@ Titles Match!! /n");
       if (
         ex.state &&
-        //ex.state !== finding.check.issue.category &&
+        finding.check.issue &&
+        ex.state !== finding.check.issue.category &&
         ex.state === "closed"
       ) {
         // re-open the GH Issue (regression)
