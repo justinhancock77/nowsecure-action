@@ -59252,16 +59252,16 @@ function run() {
                             }
                         }
                         else {
-                            //   // create a new GH Issue
-                            //   console.log("create a new issue!");
-                            //   await octokit.request("POST /repos/{owner}/{repo}/issues", {
-                            //     owner: repo_owner,
-                            //     repo: repo,
-                            //     title: finding.title,
-                            //     body: finding.summary,
-                            //     assignees: [assignees],
-                            //     labels: [finding.severity],
-                            //   });
+                            // create a new GH Issue
+                            console.log("create a new issue!");
+                            yield octokit.request("POST /repos/{owner}/{repo}/issues", {
+                                owner: repo_owner,
+                                repo: repo,
+                                title: finding.title,
+                                body: finding.summary,
+                                assignees: [assignees],
+                                labels: [finding.severity],
+                            });
                         }
                     }
                 }
