@@ -143,11 +143,11 @@ export function buildBody(finding: Finding) {
   result = "<h3>Description:</h3>";
   result += issue && issue.description ? issue.description : "N/A";
   result += "<h3>Impact Summary:</h3>";
-  result += issue.impactSummary;
+  result += issue && issue.impactSummary ? issue.impactSummary : "N/A";
   result += "<h3>Steps to reproduce:</h3>";
-  result += issue.stepsToReproduce ? issue.stepsToReproduce : "N/A";
+  result += issue && issue.stepsToReproduce ? issue.stepsToReproduce : "N/A";
   result += "<h3>Recommendations:</h3></p>";
-  result += issue.recommendation;
+  result += issue && issue.recommendation ? issue.recommendation : "N/A";
 
   return result;
 }
