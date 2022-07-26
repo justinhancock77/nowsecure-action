@@ -59269,8 +59269,8 @@ function issueExists(finding, existing) {
                     ex.state !== finding.check.issue.category &&
                     ex.state === "closed") {
                     // pass back the id of the issue to be re-opened
-                    return ex.id;
-                    console.log("re-open the ticket", ex.number);
+                    console.log("Id to update!", ex.number);
+                    return ex.number;
                 }
             }
         }
