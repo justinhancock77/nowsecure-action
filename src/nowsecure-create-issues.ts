@@ -86,7 +86,9 @@ export async function run() {
       for (var finding of report.data.auto.assessments[0].report.findings) {
         console.log("finding title", finding.title);
         //console.log("existing.data", existing);
-        if (!reopenIfExists(finding, existing, octokit, repo, repo_owner)) {
+        if (
+          !reopenIfExists(finding, existing.data, octokit, repo, repo_owner)
+        ) {
           // create a new GH Issue
           console.log("create a new issue!");
           await octokit.request("POST /repos/{owner}/{repo}/issues", {
