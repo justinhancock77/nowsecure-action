@@ -59274,7 +59274,7 @@ function buildBody(finding) {
     let result;
     let issue = finding.check.issue;
     result = "<h3>Description:</h3>";
-    result += issue.description;
+    result += issue.description ? issue.description : "N/A";
     result += "<h3>Impact Summary:</h3>";
     result += issue.impactSummary;
     result += "<h3>Steps to reproduce:</h3>";
