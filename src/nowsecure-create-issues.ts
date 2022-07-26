@@ -97,7 +97,7 @@ export async function run() {
           );
         } else {
           // create a new GH Issue
-          console.log("create a new issue!");
+          console.log("WE HAVE EXISTING ISSUES: create a new issue!");
           await octokit.request("POST /repos/{owner}/{repo}/issues", {
             owner: repo_owner,
             repo: repo,
