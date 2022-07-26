@@ -59226,7 +59226,7 @@ function run() {
                     });
                 }
             }
-            if (existing && existing.data) {
+            else if (existing && existing.data) {
                 console.log("existing issue found");
                 for (var finding of report.data.auto.assessments[0].report.findings) {
                     let issueToUpdate = yield issueExists(finding, existing.data);
@@ -59267,7 +59267,7 @@ function issueExists(finding, existing) {
                 console.log("@@@@@@ Titles Match!! /n");
                 if (ex.state &&
                     finding.check.issue &&
-                    ex.state !== finding.check.issue.category &&
+                    //ex.state !== finding.check.issue.category &&
                     ex.state === "closed") {
                     // pass back the id of the issue to be re-opened
                     console.log("Id to update!", ex.number);
