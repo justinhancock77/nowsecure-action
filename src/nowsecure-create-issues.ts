@@ -64,7 +64,7 @@ export async function run() {
       repo: repo,
       state: "all",
     });
-    console.log("existing issues?", JSON.stringify(existing));
+    //console.log("existing issues?", JSON.stringify(existing));
 
     // there are zero existing issues
     if (!existing || existing.data.length === 0) {
@@ -117,7 +117,11 @@ export function reopenIfExists(
     if (ex.title === finding.title) {
       // the issue already exists, check status
       console.log("@@@@@@ Titles Match!! /n");
-      if (ex.state !== finding.check.issue.category && ex.state === "closed") {
+      if (
+        ex.state &&
+        ex.state !== finding.check.issue.category &&
+        ex.state === "closed"
+      ) {
         // re-open the GH Issue (regression)
         result = true;
         console.log("re-open the ticket", ex.number);
@@ -139,7 +143,7 @@ export function reopenIfExists(
 export function buildBody(finding: Finding) {
   let result;
   let issue = finding.check.issue;
-  console.log("issue", JSON.stringify(issue));
+  //console.log("issue", JSON.stringify(issue));
   result = "<h3>Description:</h3>";
   result += issue && issue.description ? issue.description : "N/A";
   result += "<h3>Impact Summary:</h3>";
