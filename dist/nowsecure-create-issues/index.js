@@ -59230,6 +59230,7 @@ function run() {
                 console.log("existing issue found");
                 for (var finding of report.data.auto.assessments[0].report.findings) {
                     let issueToUpdate = issueExists(finding, existing.data);
+                    console.log("issueToUpdate", issueToUpdate);
                     if (issueToUpdate) {
                         // re-open thee issue
                         yield octokit.request("PATCH /repos/{owner}/{repo}/issues/{issue_number}", {

@@ -85,6 +85,7 @@ export async function run() {
       console.log("existing issue found");
       for (var finding of report.data.auto.assessments[0].report.findings) {
         let issueToUpdate = issueExists(finding, existing.data);
+        console.log("issueToUpdate", issueToUpdate);
         if (issueToUpdate) {
           // re-open thee issue
           await octokit.request(
