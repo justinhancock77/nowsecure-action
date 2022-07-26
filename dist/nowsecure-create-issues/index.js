@@ -59235,7 +59235,7 @@ function run() {
                         yield octokit.request("PATCH /repos/{owner}/{repo}/issues/{issue_number}", {
                             owner: repo_owner,
                             repo: repo,
-                            issue_number: parseInt(yield issueToUpdate),
+                            issue_number: yield issueToUpdate,
                             state: "open",
                         });
                     }

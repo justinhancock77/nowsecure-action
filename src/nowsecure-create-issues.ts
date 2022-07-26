@@ -92,7 +92,7 @@ export async function run() {
             {
               owner: repo_owner,
               repo: repo,
-              issue_number: parseInt(await issueToUpdate),
+              issue_number: await issueToUpdate,
               state: "open",
             }
           );
