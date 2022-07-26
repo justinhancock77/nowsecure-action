@@ -82,10 +82,13 @@ export async function run() {
     } else if (existing && existing.data) {
       console.log("existing issue found");
       for (var finding of report.data.auto.assessments[0].report.findings) {
+        // use a map
+        type ActiveOrders = { [issueId: string]: { name: string } };
+
         let issueToUpdate = await issueExists(finding, existing.data);
         console.log("issueToUpdate", JSON.stringify(issueToUpdate));
-        if (issueToUpdate) {
-          // re-open thee issue
+        if (issueToUpdate && issueToUpdate > 0) {
+          // re-open the issue
           await octokit.request(
             "PATCH /repos/{owner}/{repo}/issues/{issue_number}",
             {
@@ -95,9 +98,9 @@ export async function run() {
               state: "open",
             }
           );
-        } else {
+        } else if (issueToUpdate && issueToUpdate === 0) {
           // create a new GH Issue
-          console.log("WE HAVE EXISTING ISSUES: create a new issue!");
+          console.log("ADD an issue existing before run!");
           await octokit.request("POST /repos/{owner}/{repo}/issues", {
             owner: repo_owner,
             repo: repo,
@@ -113,11 +116,14 @@ export async function run() {
 }
 
 export async function issueExists(finding: Finding, existing: any) {
-  let result;
+  // pass back the id if we need to update.  will always be greater than zero
+  // pass back 0 to create a new issue
+  // pass back -1 to do nothing (we already have this issue, and it's not closed)
+  let result = 0; // default to we didn't find THIS issue in the existing collection
   for (var ex of existing) {
     if (ex.title === finding.title) {
       // the issue already exists, check status
-      console.log("@@@@@@ Titles Match!! /n");
+      console.log("Titles Match!!");
       if (
         ex.state &&
         finding.check.issue &&
@@ -125,12 +131,17 @@ export async function issueExists(finding: Finding, existing: any) {
         ex.state === "closed"
       ) {
         // pass back the id of the issue to be re-opened
-        console.log("Id to update!", ex.number);
-        return ex.number;
+        console.log("Issue id to re-open!", ex.number);
+        result = ex.number;
+        break;
+      } else if (ex.state === "open") {
+        // don't create a dupe ticket
+        result = -1;
+        break;
       }
     }
   }
-  return null;
+  return result;
 }
 
 export function buildBody(finding: Finding) {
