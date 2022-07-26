@@ -86,45 +86,54 @@ export async function run() {
       for (var finding of report.data.auto.assessments[0].report.findings) {
         console.log("finding title", finding.title);
         //console.log("existing.data", existing);
-        for (var ex of existing.data) {
-          console.log("existing title", JSON.stringify(ex.title));
-
-          if (ex.title === finding.title) {
-            // the issue already exists, check status
-            console.log("@@@@@@ Titles Match!! /n");
-            if (
-              ex.state !== finding.check.issue.category &&
-              ex.state === "closed"
-            ) {
-              // re-open the GH Issue (regression)
-              console.log("re-open the ticket", ex.number);
-              await octokit.request(
-                "PATCH /repos/{owner}/{repo}/issues/{issue_number}",
-                {
-                  owner: repo_owner,
-                  repo: repo,
-                  issue_number: ex.number,
-                  state: "open",
-                }
-              );
-              break; // break out of inner since we matched
-            }
-          } else {
-            // create a new GH Issue
-            console.log("create a new issue!");
-            await octokit.request("POST /repos/{owner}/{repo}/issues", {
-              owner: repo_owner,
-              repo: repo,
-              title: finding.title,
-              body: buildBody(finding),
-              assignees: [assignees],
-              labels: [finding.severity],
-            });
-          }
+        if (!reopenIfExists(finding, existing, octokit, repo, repo_owner)) {
+          // create a new GH Issue
+          console.log("create a new issue!");
+          await octokit.request("POST /repos/{owner}/{repo}/issues", {
+            owner: repo_owner,
+            repo: repo,
+            title: finding.title,
+            body: buildBody(finding),
+            assignees: [assignees],
+            labels: [finding.severity],
+          });
         }
       }
     }
   }
+}
+
+export async function reopenIfExists(
+  finding: Finding,
+  existing: any,
+  octokit: Octokit,
+  repo: string,
+  repo_owner: string
+) {
+  let result = false;
+  for (var ex of existing) {
+    if (ex.title === finding.title) {
+      // the issue already exists, check status
+      console.log("@@@@@@ Titles Match!! /n");
+      if (ex.state !== finding.check.issue.category && ex.state === "closed") {
+        // re-open the GH Issue (regression)
+        result = true;
+        console.log("re-open the ticket", ex.number);
+        await octokit.request(
+          "PATCH /repos/{owner}/{repo}/issues/{issue_number}",
+          {
+            owner: repo_owner,
+            repo: repo,
+            issue_number: ex.number,
+            state: "open",
+          }
+        );
+        break; // break out of inner since we matched
+      }
+    }
+  }
+
+  return result;
 }
 
 export function buildBody(finding: Finding) {

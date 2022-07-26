@@ -59157,7 +59157,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.buildBody = exports.run = void 0;
+exports.buildBody = exports.reopenIfExists = exports.run = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const nowsecure_client_1 = __nccwpck_require__(4619);
 const action_1 = __nccwpck_require__(1231);
@@ -59233,36 +59233,17 @@ function run() {
                 for (var finding of report.data.auto.assessments[0].report.findings) {
                     console.log("finding title", finding.title);
                     //console.log("existing.data", existing);
-                    for (var ex of existing.data) {
-                        console.log("existing title", JSON.stringify(ex.title));
-                        if (ex.title === finding.title) {
-                            // the issue already exists, check status
-                            console.log("@@@@@@ Titles Match!! /n");
-                            if (ex.state !== finding.check.issue.category &&
-                                ex.state === "closed") {
-                                // re-open the GH Issue (regression)
-                                console.log("re-open the ticket", ex.number);
-                                yield octokit.request("PATCH /repos/{owner}/{repo}/issues/{issue_number}", {
-                                    owner: repo_owner,
-                                    repo: repo,
-                                    issue_number: ex.number,
-                                    state: "open",
-                                });
-                                break; // break out of inner since we matched
-                            }
-                        }
-                        else {
-                            // create a new GH Issue
-                            console.log("create a new issue!");
-                            yield octokit.request("POST /repos/{owner}/{repo}/issues", {
-                                owner: repo_owner,
-                                repo: repo,
-                                title: finding.title,
-                                body: buildBody(finding),
-                                assignees: [assignees],
-                                labels: [finding.severity],
-                            });
-                        }
+                    if (!reopenIfExists(finding, existing, octokit, repo, repo_owner)) {
+                        // create a new GH Issue
+                        console.log("create a new issue!");
+                        yield octokit.request("POST /repos/{owner}/{repo}/issues", {
+                            owner: repo_owner,
+                            repo: repo,
+                            title: finding.title,
+                            body: buildBody(finding),
+                            assignees: [assignees],
+                            labels: [finding.severity],
+                        });
                     }
                 }
             }
@@ -59270,6 +59251,31 @@ function run() {
     });
 }
 exports.run = run;
+function reopenIfExists(finding, existing, octokit, repo, repo_owner) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let result = false;
+        for (var ex of existing) {
+            if (ex.title === finding.title) {
+                // the issue already exists, check status
+                console.log("@@@@@@ Titles Match!! /n");
+                if (ex.state !== finding.check.issue.category && ex.state === "closed") {
+                    // re-open the GH Issue (regression)
+                    result = true;
+                    console.log("re-open the ticket", ex.number);
+                    yield octokit.request("PATCH /repos/{owner}/{repo}/issues/{issue_number}", {
+                        owner: repo_owner,
+                        repo: repo,
+                        issue_number: ex.number,
+                        state: "open",
+                    });
+                    break; // break out of inner since we matched
+                }
+            }
+        }
+        return result;
+    });
+}
+exports.reopenIfExists = reopenIfExists;
 function buildBody(finding) {
     let result;
     let issue = finding.check.issue;
