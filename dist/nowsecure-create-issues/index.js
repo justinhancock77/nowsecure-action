@@ -59294,7 +59294,7 @@ function buildBody(finding) {
     let result;
     let issue = finding.check.issue;
     console.log("buildBody issue:", finding);
-    (result = "unique_id:"), finding.key;
+    result = "unique_id:" + finding.key;
     //result = "check_id" + issue.
     result += "<h3>Description:</h3>";
     result += issue && issue.description ? issue.description : "N/A";
