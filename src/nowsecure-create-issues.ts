@@ -122,14 +122,9 @@ export async function issueExists(finding: Finding, existing: any) {
       // unique key matches
       // the issue already exists, check status
       console.log("Titles Match!!");
-      if (
-        ex.state &&
-        finding.check.issue &&
-        //ex.state !== finding.check.issue.category &&
-        ex.state === "closed"
-      ) {
+      if (ex.state && finding.check.issue && ex.state === "closed") {
         // pass back the id of the issue to be re-opened
-        console.log("Issue id to re-open!", ex.number);
+        console.log("re-open issue #: ", ex.number);
         result = ex.number;
         break;
       } else if (ex.state === "open") {
