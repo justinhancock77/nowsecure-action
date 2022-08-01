@@ -125,7 +125,8 @@ export async function issueExists(finding: Finding, existing: any) {
         ex.state &&
         finding.check.issue &&
         //ex.state !== finding.check.issue.category &&
-        ex.state === "closed"
+        ex.state === "closed" &&
+        ex.body.indexOf(finding.key) >= 0 // ensure we are not creating a dupe!
       ) {
         // pass back the id of the issue to be re-opened
         console.log("Issue id to re-open!", ex.number);
@@ -145,8 +146,9 @@ export function buildBody(finding: Finding) {
   let result;
   let issue = finding.check.issue;
   console.log("buildBody issue:", finding);
+  (result = "unique_id:"), finding.key;
   //result = "check_id" + issue.
-  result = "<h3>Description:</h3>";
+  result += "<h3>Description:</h3>";
   result += issue && issue.description ? issue.description : "N/A";
   result += "<h3>Impact Summary:</h3>";
   result += issue && issue.impactSummary ? issue.impactSummary : "N/A";
