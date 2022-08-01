@@ -59163,12 +59163,8 @@ const nowsecure_client_1 = __nccwpck_require__(4619);
 const action_1 = __nccwpck_require__(1231);
 const util_1 = __nccwpck_require__(3837);
 const sleep = (0, util_1.promisify)(setTimeout);
-// need to take the output and iterate over it and create issues,
-// WITHOUT duplicating issues on each run.  Need to use the hash / something
-// unique to determine whether the GH issue exists already
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
-        // check to see if enable_issues is true
         if (core.getInput("create_issues")) {
             const octokit = new action_1.Octokit({
                 auth: core.getInput("GITHUB_TOKEN"),
@@ -59268,7 +59264,7 @@ function issueExists(finding, existing) {
             if (ex.title === finding.title && ex.body.indexOf(finding.key) >= 0) {
                 // unique key matches
                 // the issue already exists, check status
-                console.log("Titles Match!!");
+                console.log("Issue title and unique_id match");
                 if (ex.state && finding.check.issue && ex.state === "closed") {
                     // pass back the id of the issue to be re-opened
                     console.log("re-open issue #: ", ex.number);
@@ -59277,6 +59273,7 @@ function issueExists(finding, existing) {
                 }
                 else if (ex.state === "open") {
                     // do NOT create a dupe ticket
+                    console.log("ticket already exists, skip");
                     result = -1;
                     break;
                 }
@@ -59289,9 +59286,7 @@ exports.issueExists = issueExists;
 function buildBody(finding) {
     let result;
     let issue = finding.check.issue;
-    console.log("buildBody issue: ", finding);
     result = "unique_id: " + finding.key;
-    //result = "check_id" + issue.
     result += "<h3>Description:</h3>";
     result += issue && issue.description ? issue.description : "N/A";
     result += "<h3>Impact Summary:</h3>";
