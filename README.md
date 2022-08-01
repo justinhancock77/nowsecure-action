@@ -11,7 +11,7 @@ The `nowsecure-action` delivers fast, accurate, automated security analysis of i
 
 ### Prerequisites
 
-- To use this action an active NowSecure Platform account is required. If you ***are not*** an existing NowSecure Platform customer, please [contact us](https://info.nowsecure.com/github-request).
+- To use this action an active NowSecure Platform account is required. If you **_are not_** an existing NowSecure Platform customer, please [contact us](https://info.nowsecure.com/github-request).
 - An active GitHub account (cloud or on-prem) with an active Advanced Security feature
 
 ### GitHub Marketplace Setup (recommended)
@@ -20,12 +20,12 @@ Click the "Security" tab in your repository (GHAS must be enabled) then "Set up 
 
 ### Setting up this Action
 
-- First, generate your NowSecure platform token. 
-  - To generate a token, in the UI, go to the "Profile & Preferences"  page and click “Create Token”
-- Then, In the repository settings, set up a new  NS_TOKEN token by clicking "Secrets" and then "New repository secret"
+- First, generate your NowSecure platform token.
+  - To generate a token, in the UI, go to the "Profile & Preferences" page and click “Create Token”
+- Then, In the repository settings, set up a new NS_TOKEN token by clicking "Secrets" and then "New repository secret"
 - Next, copy the group ID for the group you would like to pull from
   - To find your group ID, in the UI, go to your app’s “Package Details” page and copy the Group ID by hovering over the group name
-- Lastly, enable scanning alerts in GitHub. 
+- Lastly, enable scanning alerts in GitHub.
   - Click the "Security" tab in your repository (GHAS must be enabled) then "Set up code scanning" then select the NowSecure action from the marketplace and follow the listed instructions.
 
 ### Required Configuration
