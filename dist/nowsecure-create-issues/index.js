@@ -59265,15 +59265,14 @@ function issueExists(finding, existing) {
         // pass back -1 to do nothing (we already have this issue, and it's not closed)
         let result = 0; // default to we didn't find THIS issue in the existing collection
         for (var ex of existing) {
-            if (ex.title === finding.title) {
+            if (ex.title === finding.title && ex.body.indexOf(finding.key) >= 0) {
+                // unique key matches
                 // the issue already exists, check status
                 console.log("Titles Match!!");
                 if (ex.state &&
                     finding.check.issue &&
                     //ex.state !== finding.check.issue.category &&
-                    ex.state === "closed" &&
-                    ex.body.indexOf(finding.key) >= 0 // ensure we are not creating a dupe!
-                ) {
+                    ex.state === "closed") {
                     // pass back the id of the issue to be re-opened
                     console.log("Issue id to re-open!", ex.number);
                     result = ex.number;
@@ -59293,8 +59292,8 @@ exports.issueExists = issueExists;
 function buildBody(finding) {
     let result;
     let issue = finding.check.issue;
-    console.log("buildBody issue:", finding);
-    result = "unique_id:" + finding.key;
+    console.log("buildBody issue: ", finding);
+    result = "unique_id: " + finding.key;
     //result = "check_id" + issue.
     result += "<h3>Description:</h3>";
     result += issue && issue.description ? issue.description : "N/A";
