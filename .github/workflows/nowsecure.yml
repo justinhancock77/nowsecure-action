@@ -57,8 +57,8 @@ jobs:
   issues:
     #if: ${{ needs.scan.outputs.report_id }}
     runs-on: ubuntu-latest
-    environment:
-      name: nowsecure-action-test-env
+    # environment:
+    #   name: nowsecure-action-test-env
     # permissions needed for issue creation
     permissions: write-all
     #needs: scan
