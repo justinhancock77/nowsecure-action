@@ -59291,6 +59291,8 @@ exports.issueExists = issueExists;
 function buildBody(finding) {
     let result;
     let issue = finding.check.issue;
+    console.log("buildBody issue:", finding.check.issue);
+    //result = "check_id" + issue.
     result = "<h3>Description:</h3>";
     result += issue && issue.description ? issue.description : "N/A";
     result += "<h3>Impact Summary:</h3>";
