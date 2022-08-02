@@ -81,7 +81,7 @@ export async function run() {
         });
       }
     } else if (existing && existing.data) {
-      console.log("existing issue FOUND");
+      console.log("existing issues FOUND");
       for (var finding of report.data.auto.assessments[0].report.findings) {
         const issueToUpdate = await issueExists(finding, existing.data);
         console.log("issueToUpdate", issueToUpdate);
