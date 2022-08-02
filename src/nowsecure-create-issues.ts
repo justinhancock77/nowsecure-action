@@ -32,6 +32,7 @@ export async function run() {
 
     const ns = new NowSecure(platformToken, apiUrl, labApiUrl);
     let pollInterval = 60000;
+    let issueInterval = 1000;
 
     // Poll Platform to resolve the report ID to a report.
     // GitHub Actions will handle the timeout for us in the event something goes awry.
@@ -75,6 +76,7 @@ export async function run() {
           assignees: [assignees],
           labels: [finding.severity],
         });
+        sleep(issueInterval); // avoid secondary rate limit
       }
     } else if (existing && existing.data) {
       console.log("existing issue found");
@@ -93,6 +95,7 @@ export async function run() {
               state: "open",
             }
           );
+          sleep(issueInterval); // avoid secondary rate limit
         } else if (issueToUpdate === 0) {
           // create a new GH Issue
           console.log("create new issue");
@@ -104,6 +107,7 @@ export async function run() {
             assignees: [assignees],
             labels: [finding.severity],
           });
+          sleep(issueInterval); // avoid secondary rate limit
         }
       }
     }

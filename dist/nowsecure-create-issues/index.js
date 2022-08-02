@@ -59180,6 +59180,7 @@ function run() {
             const repo_owner = core.getInput("repo_owner");
             const ns = new nowsecure_client_1.NowSecure(platformToken, apiUrl, labApiUrl);
             let pollInterval = 60000;
+            let issueInterval = 1000;
             // Poll Platform to resolve the report ID to a report.
             // GitHub Actions will handle the timeout for us in the event something goes awry.
             let report = null;
@@ -59221,6 +59222,7 @@ function run() {
                         assignees: [assignees],
                         labels: [finding.severity],
                     });
+                    sleep(issueInterval); // avoid secondary rate limit
                 }
             }
             else if (existing && existing.data) {
@@ -59237,6 +59239,7 @@ function run() {
                             issue_number: issueToUpdate,
                             state: "open",
                         });
+                        sleep(issueInterval); // avoid secondary rate limit
                     }
                     else if (issueToUpdate === 0) {
                         // create a new GH Issue
@@ -59249,6 +59252,7 @@ function run() {
                             assignees: [assignees],
                             labels: [finding.severity],
                         });
+                        sleep(issueInterval); // avoid secondary rate limit
                     }
                 }
             }
