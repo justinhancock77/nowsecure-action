@@ -83,7 +83,7 @@ export async function run() {
     } else if (existing && existing.data) {
       console.log("existing issue FOUND");
       for (var finding of report.data.auto.assessments[0].report.findings) {
-        let issueToUpdate = await issueExists(finding, existing.data);
+        const issueToUpdate = await issueExists(finding, existing.data);
         console.log("issueToUpdate", JSON.stringify(issueToUpdate));
         if (issueToUpdate && issueToUpdate > 0) {
           // re-open the issue
@@ -96,7 +96,7 @@ export async function run() {
               state: "open",
             }
           );
-        } else if (issueToUpdate && issueToUpdate === 0) {
+        } else {
           // create a new GH Issue
           console.log("ADD an issue existing before run!");
           await octokit.request("POST /repos/{owner}/{repo}/issues", {
