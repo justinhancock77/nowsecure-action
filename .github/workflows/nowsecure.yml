@@ -75,4 +75,4 @@ jobs:
           platform-token: ${{ secrets.NS_TOKEN }}
           repo: "nowsecure-action"
           repo_owner: "justinhancock77"
-          assignees: ""
+          assignees: "justinhancock77"

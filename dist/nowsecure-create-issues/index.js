@@ -59168,7 +59168,7 @@ const sleep = (0, util_1.promisify)(setTimeout);
 // unique to determine whether the GH issue exists already
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
-        // check to see if enable_issues is true
+        // check to see if create_issues is true
         if (core.getInput("create_issues")) {
             const octokit = new action_1.Octokit({
                 auth: core.getInput("GITHUB_TOKEN"),
@@ -59214,7 +59214,7 @@ function run() {
             });
             console.log("existing issues result:", existing.data.length);
             // there are zero existing issues, so create new from findings.
-            if (!existing || existing.data.length === 0) {
+            if (!existing || existing.data.length <= 2) {
                 console.log("no existing issues, create new ones!");
                 for (var finding of report.data.auto.assessments[0].report.findings) {
                     console.log("create a new issue!");

@@ -16,7 +16,7 @@ const sleep = promisify(setTimeout);
 // WITHOUT duplicating issues on each run.  Need to use the hash / something
 // unique to determine whether the GH issue exists already
 export async function run() {
-  // check to see if enable_issues is true
+  // check to see if create_issues is true
   if (core.getInput("create_issues")) {
     const octokit = new Octokit({
       auth: core.getInput("GITHUB_TOKEN"),
@@ -67,7 +67,7 @@ export async function run() {
     });
     console.log("existing issues result:", existing.data.length);
     // there are zero existing issues, so create new from findings.
-    if (!existing || existing.data.length === 0) {
+    if (!existing || existing.data.length <= 2) {
       console.log("no existing issues, create new ones!");
       for (var finding of report.data.auto.assessments[0].report.findings) {
         console.log("create a new issue!");
