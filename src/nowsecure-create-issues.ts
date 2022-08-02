@@ -63,7 +63,6 @@ export async function run() {
     const existing = await octokit.request("GET /repos/{owner}/{repo}/issues", {
       owner: repo_owner,
       repo: repo,
-      state: "all",
     });
     console.log("existing issues result:", existing.data.length);
     // there are zero existing issues, so create new from findings.
