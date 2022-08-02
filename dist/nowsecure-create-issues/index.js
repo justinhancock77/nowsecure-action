@@ -59210,6 +59210,8 @@ function run() {
             const existing = yield octokit.request("GET /repos/{owner}/{repo}/issues", {
                 owner: repo_owner,
                 repo: repo,
+                state: "all",
+                per_page: 1000,
             });
             console.log("existing issues result:", existing.data.length);
             // there are zero existing issues, so create new from findings.
