@@ -65,7 +65,6 @@ export async function run() {
       state: "all",
     });
 
-    console.log("existing.data: ", JSON.stringify(existing.data));
     // there are zero existing issues, so create new from findings.
     if (!existing || existing.data.length === 0) {
       console.log("no existing issues, create new ones!");
@@ -145,8 +144,6 @@ export async function issueExists(finding: Finding, existing: any) {
 export function buildBody(finding: Finding) {
   let result;
   let issue = finding.check.issue;
-  console.log("buildBody issue:", finding);
-  //result = "check_id" + issue.
   result = "<h3>Description:</h3>";
   result += issue && issue.description ? issue.description : "N/A";
   result += "<h3>Impact Summary:</h3>";
