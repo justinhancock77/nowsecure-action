@@ -59207,6 +59207,8 @@ function run() {
                 repo: repo,
                 state: "all",
             });
+            console.log("existing issues? ", existing && existing.data.length > 0 ? "YES" : "NO");
+            console.log("existing:", JSON.stringify(existing));
             // there are zero existing issues, so create new from findings.
             if (!existing || existing.data.length === 0) {
                 console.log("no existing issues, create new ones!");
