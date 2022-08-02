@@ -59212,6 +59212,7 @@ function run() {
                 repo: repo,
                 state: "all",
             });
+            console.log("existing issues result:", existing);
             // there are zero existing issues, so create new from findings.
             if (!existing || existing.data.length === 0) {
                 console.log("no existing issues, create new ones!");
@@ -59231,7 +59232,7 @@ function run() {
                 console.log("existing issue FOUND");
                 for (var finding of report.data.auto.assessments[0].report.findings) {
                     const issueToUpdate = yield issueExists(finding, existing.data);
-                    console.log("issueToUpdate", JSON.stringify(issueToUpdate));
+                    console.log("issueToUpdate", issueToUpdate);
                     if (issueToUpdate && issueToUpdate > 0) {
                         // re-open the issue
                         console.log("re-open the issue that was closed");
