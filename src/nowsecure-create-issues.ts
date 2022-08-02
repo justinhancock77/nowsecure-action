@@ -65,6 +65,7 @@ export async function run() {
       state: "all",
     });
 
+    console.log("existing.data.length: ", existing.data.length);
     // there are zero existing issues, so create new from findings.
     if (!existing || existing.data.length === 0) {
       console.log("no existing issues, create new ones!");
