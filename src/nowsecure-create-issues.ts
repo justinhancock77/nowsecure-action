@@ -114,7 +114,11 @@ export async function issueExists(finding: Finding, existing: any) {
   // pass back -1 to do nothing (we already have this issue, and it's not closed)
   let result = 0; // default to we didn't find THIS issue in the existing collection
   for (var ex of existing) {
-    if (ex.title === finding.title && ex.body.indexOf(finding.key) >= 0) {
+    if (
+      ex.title === finding.title &&
+      ex.body &&
+      ex.body.indexOf(finding.key) >= 0
+    ) {
       // unique key matches
       // the issue already exists, check status
       console.log("Issue title and unique_id match");
