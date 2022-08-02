@@ -87,6 +87,7 @@ export async function run() {
         console.log("issueToUpdate", JSON.stringify(issueToUpdate));
         if (issueToUpdate && issueToUpdate > 0) {
           // re-open the issue
+          console.log("re-open the issue that was closed");
           await octokit.request(
             "PATCH /repos/{owner}/{repo}/issues/{issue_number}",
             {
@@ -98,7 +99,7 @@ export async function run() {
           );
         } else if (issueToUpdate && issueToUpdate === 0) {
           // create a new GH Issue
-          console.log("ADD an issue existing before run!");
+          console.log("Add new issue to existing");
           await octokit.request("POST /repos/{owner}/{repo}/issues", {
             owner: repo_owner,
             repo: repo,
