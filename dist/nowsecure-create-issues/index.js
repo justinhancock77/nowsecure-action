@@ -59228,17 +59228,7 @@ function run() {
                 for (var finding of report.data.auto.assessments[0].report.findings) {
                     let issueToUpdate = yield issueExists(finding, existing.data);
                     console.log("issueToUpdate", JSON.stringify(issueToUpdate));
-                    if (issueToUpdate && issueToUpdate > 0) {
-                        // re-open the issue
-                        console.log("re-open the issue");
-                        yield octokit.request("PATCH /repos/{owner}/{repo}/issues/{issue_number}", {
-                            owner: repo_owner,
-                            repo: repo,
-                            issue_number: issueToUpdate,
-                            state: "open",
-                        });
-                    }
-                    else if (issueToUpdate && issueToUpdate === 0) {
+                    if (issueToUpdate && issueToUpdate === 0) {
                         // create a new GH Issue
                         console.log("create new issue");
                         yield octokit.request("POST /repos/{owner}/{repo}/issues", {
@@ -59248,6 +59238,16 @@ function run() {
                             body: buildBody(finding),
                             assignees: [assignees],
                             labels: [finding.severity],
+                        });
+                    }
+                    else if (issueToUpdate && issueToUpdate > 0) {
+                        // re-open the issue
+                        console.log("re-open the issue");
+                        yield octokit.request("PATCH /repos/{owner}/{repo}/issues/{issue_number}", {
+                            owner: repo_owner,
+                            repo: repo,
+                            issue_number: issueToUpdate,
+                            state: "open",
                         });
                     }
                 }
