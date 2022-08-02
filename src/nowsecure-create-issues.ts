@@ -136,6 +136,7 @@ export async function issueExists(finding: Finding, existing: any) {
       }
     }
   }
+  console.log("issueExists result: ", result);
   return result;
 }
 

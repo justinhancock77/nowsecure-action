@@ -59282,6 +59282,7 @@ function issueExists(finding, existing) {
                 }
             }
         }
+        console.log("issueExists result: ", result);
         return result;
     });
 }
