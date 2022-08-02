@@ -58,6 +58,7 @@ export async function run() {
       }
     }
 
+    console.log("check for existing issues");
     // pull all the issues we have to determine dupes and to re-open issues
     const existing = await octokit.request("GET /repos/{owner}/{repo}/issues", {
       owner: repo_owner,
@@ -65,10 +66,23 @@ export async function run() {
       state: "all",
     });
 
-    if (existing && existing.data) {
-      console.log("existing issues found!");
+    // there are zero existing issues, so create new from findings.
+    if (!existing || existing.data.length === 0) {
+      console.log("no existing issues, create new ones!");
       for (var finding of report.data.auto.assessments[0].report.findings) {
-        console.log("finding:", finding);
+        console.log("create a new issue!");
+        await octokit.request("POST /repos/{owner}/{repo}/issues", {
+          owner: repo_owner,
+          repo: repo,
+          title: finding.title,
+          body: buildBody(finding),
+          assignees: [assignees],
+          labels: [finding.severity],
+        });
+      }
+    } else if (existing && existing.data) {
+      console.log("existing issue FOUND");
+      for (var finding of report.data.auto.assessments[0].report.findings) {
         let issueToUpdate = await issueExists(finding, existing.data);
         console.log("issueToUpdate", JSON.stringify(issueToUpdate));
         if (issueToUpdate && issueToUpdate > 0) {
@@ -105,17 +119,13 @@ export async function issueExists(finding: Finding, existing: any) {
   // pass back -1 to do nothing (we already have this issue, and it's not closed)
   let result = 0; // default to we didn't find THIS issue in the existing collection
   for (var ex of existing) {
-    if (ex.title === finding.title) {
+    if (ex.title === finding.title && ex.body.indexOf(finding.key) >= 0) {
+      // unique key matches
       // the issue already exists, check status
       console.log("Titles Match!!");
-      if (
-        ex.state &&
-        finding.check.issue &&
-        //ex.state !== finding.check.issue.category &&
-        ex.state === "closed"
-      ) {
+      if (ex.state && finding.check.issue && ex.state === "closed") {
         // pass back the id of the issue to be re-opened
-        console.log("Issue id to re-open!", ex.number);
+        console.log("re-open issue #: ", ex.number);
         result = ex.number;
         break;
       } else if (ex.state === "open") {
@@ -125,14 +135,16 @@ export async function issueExists(finding: Finding, existing: any) {
       }
     }
   }
-  console.log("returning result:", result);
   return result;
 }
 
 export function buildBody(finding: Finding) {
   let result;
   let issue = finding.check.issue;
-  result = "<h3>Description:</h3>";
+  console.log("buildBody issue: ", finding);
+  result = "unique_id: " + finding.key;
+  //result = "check_id" + issue.
+  result += "<h3>Description:</h3>";
   result += issue && issue.description ? issue.description : "N/A";
   result += "<h3>Impact Summary:</h3>";
   result += issue && issue.impactSummary ? issue.impactSummary : "N/A";

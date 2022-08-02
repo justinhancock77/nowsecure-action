@@ -71,7 +71,7 @@ jobs:
         timeout-minutes: 30
         with:
           report_id: "b1de7c6e-0c48-11ed-8e5b-57b2256adfa9"
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          #GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           platform-token: ${{ secrets.NS_TOKEN }}
           repo: "nowsecure-action"
           repo_owner: "justinhancock77"
