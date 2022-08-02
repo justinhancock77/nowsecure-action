@@ -59212,8 +59212,9 @@ function run() {
                 state: "all",
             });
             if (existing && existing.data) {
-                console.log("existing issue found");
+                console.log("existing issues found!");
                 for (var finding of report.data.auto.assessments[0].report.findings) {
+                    console.log("finding:", finding);
                     let issueToUpdate = yield issueExists(finding, existing.data);
                     console.log("issueToUpdate", JSON.stringify(issueToUpdate));
                     if (issueToUpdate && issueToUpdate > 0) {
@@ -59225,7 +59226,7 @@ function run() {
                             state: "open",
                         });
                     }
-                    else if (issueToUpdate && issueToUpdate === 0) {
+                    else if (issueToUpdate && issueToUpdate == 0) {
                         // create a new GH Issue
                         console.log("ADD an issue existing before run!");
                         yield octokit.request("POST /repos/{owner}/{repo}/issues", {
