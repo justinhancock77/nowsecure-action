@@ -59163,8 +59163,12 @@ const nowsecure_client_1 = __nccwpck_require__(4619);
 const action_1 = __nccwpck_require__(1231);
 const util_1 = __nccwpck_require__(3837);
 const sleep = (0, util_1.promisify)(setTimeout);
+// need to take the output and iterate over it and create issues,
+// WITHOUT duplicating issues on each run.  Need to use the hash / something
+// unique to determine whether the GH issue exists already
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
+        // check to see if enable_issues is true
         if (core.getInput("create_issues")) {
             const octokit = new action_1.Octokit({
                 auth: core.getInput("GITHUB_TOKEN"),
@@ -59207,8 +59211,6 @@ function run() {
                 repo: repo,
                 state: "all",
             });
-            console.log("existing issues? ", existing && existing.data.length > 0 ? "YES" : "NO");
-            console.log("existing:", JSON.stringify(existing.data));
             // there are zero existing issues, so create new from findings.
             if (!existing || existing.data.length === 0) {
                 console.log("no existing issues, create new ones!");
@@ -59225,13 +59227,12 @@ function run() {
                 }
             }
             else if (existing && existing.data) {
-                console.log("existing issues found");
+                console.log("existing issue found");
                 for (var finding of report.data.auto.assessments[0].report.findings) {
                     let issueToUpdate = yield issueExists(finding, existing.data);
-                    console.log("issueToUpdate result:", issueToUpdate);
+                    console.log("issueToUpdate", JSON.stringify(issueToUpdate));
                     if (issueToUpdate && issueToUpdate > 0) {
                         // re-open the issue
-                        console.log("re-open the issue");
                         yield octokit.request("PATCH /repos/{owner}/{repo}/issues/{issue_number}", {
                             owner: repo_owner,
                             repo: repo,
@@ -59241,7 +59242,7 @@ function run() {
                     }
                     else if (issueToUpdate && issueToUpdate === 0) {
                         // create a new GH Issue
-                        console.log("create a new GH Issue");
+                        console.log("ADD an issue existing before run!");
                         yield octokit.request("POST /repos/{owner}/{repo}/issues", {
                             owner: repo_owner,
                             repo: repo,
@@ -59264,27 +59265,25 @@ function issueExists(finding, existing) {
         // pass back -1 to do nothing (we already have this issue, and it's not closed)
         let result = 0; // default to we didn't find THIS issue in the existing collection
         for (var ex of existing) {
-            if (ex.title === finding.title &&
-                ex.body &&
-                ex.body.indexOf(finding.key) >= 0) {
-                // unique key matches
+            if (ex.title === finding.title) {
                 // the issue already exists, check status
-                console.log("Issue title and unique_id match");
-                if (ex.state && finding.check.issue && ex.state === "closed") {
+                console.log("Titles Match!!");
+                if (ex.state &&
+                    finding.check.issue &&
+                    //ex.state !== finding.check.issue.category &&
+                    ex.state === "closed") {
                     // pass back the id of the issue to be re-opened
-                    console.log("re-open issue #: ", ex.number);
+                    console.log("Issue id to re-open!", ex.number);
                     result = ex.number;
                     break;
                 }
                 else if (ex.state === "open") {
                     // do NOT create a dupe ticket
-                    console.log("ticket already exists, skip");
                     result = -1;
                     break;
                 }
             }
         }
-        console.log("issueExists result: ", result);
         return result;
     });
 }
@@ -59292,8 +59291,9 @@ exports.issueExists = issueExists;
 function buildBody(finding) {
     let result;
     let issue = finding.check.issue;
-    result = "unique_id: " + finding.key;
-    result += "<h3>Description:</h3>";
+    console.log("buildBody issue:", finding);
+    //result = "check_id" + issue.
+    result = "<h3>Description:</h3>";
     result += issue && issue.description ? issue.description : "N/A";
     result += "<h3>Impact Summary:</h3>";
     result += issue && issue.impactSummary ? issue.impactSummary : "N/A";

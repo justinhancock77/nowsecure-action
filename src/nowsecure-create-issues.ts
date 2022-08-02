@@ -12,7 +12,11 @@ import { Finding } from "./types/platform";
 
 const sleep = promisify(setTimeout);
 
+// need to take the output and iterate over it and create issues,
+// WITHOUT duplicating issues on each run.  Need to use the hash / something
+// unique to determine whether the GH issue exists already
 export async function run() {
+  // check to see if enable_issues is true
   if (core.getInput("create_issues")) {
     const octokit = new Octokit({
       auth: core.getInput("GITHUB_TOKEN"),
@@ -61,12 +65,6 @@ export async function run() {
       state: "all",
     });
 
-    console.log(
-      "existing issues? ",
-      existing && existing.data.length > 0 ? "YES" : "NO"
-    );
-    console.log("existing:", JSON.stringify(existing.data));
-
     // there are zero existing issues, so create new from findings.
     if (!existing || existing.data.length === 0) {
       console.log("no existing issues, create new ones!");
@@ -82,13 +80,12 @@ export async function run() {
         });
       }
     } else if (existing && existing.data) {
-      console.log("existing issues found");
+      console.log("existing issue found");
       for (var finding of report.data.auto.assessments[0].report.findings) {
         let issueToUpdate = await issueExists(finding, existing.data);
-        console.log("issueToUpdate result:", issueToUpdate);
+        console.log("issueToUpdate", JSON.stringify(issueToUpdate));
         if (issueToUpdate && issueToUpdate > 0) {
           // re-open the issue
-          console.log("re-open the issue");
           await octokit.request(
             "PATCH /repos/{owner}/{repo}/issues/{issue_number}",
             {
@@ -100,7 +97,7 @@ export async function run() {
           );
         } else if (issueToUpdate && issueToUpdate === 0) {
           // create a new GH Issue
-          console.log("create a new GH Issue");
+          console.log("ADD an issue existing before run!");
           await octokit.request("POST /repos/{owner}/{repo}/issues", {
             owner: repo_owner,
             repo: repo,
@@ -121,36 +118,35 @@ export async function issueExists(finding: Finding, existing: any) {
   // pass back -1 to do nothing (we already have this issue, and it's not closed)
   let result = 0; // default to we didn't find THIS issue in the existing collection
   for (var ex of existing) {
-    if (
-      ex.title === finding.title &&
-      ex.body &&
-      ex.body.indexOf(finding.key) >= 0
-    ) {
-      // unique key matches
+    if (ex.title === finding.title) {
       // the issue already exists, check status
-      console.log("Issue title and unique_id match");
-      if (ex.state && finding.check.issue && ex.state === "closed") {
+      console.log("Titles Match!!");
+      if (
+        ex.state &&
+        finding.check.issue &&
+        //ex.state !== finding.check.issue.category &&
+        ex.state === "closed"
+      ) {
         // pass back the id of the issue to be re-opened
-        console.log("re-open issue #: ", ex.number);
+        console.log("Issue id to re-open!", ex.number);
         result = ex.number;
         break;
       } else if (ex.state === "open") {
         // do NOT create a dupe ticket
-        console.log("ticket already exists, skip");
         result = -1;
         break;
       }
     }
   }
-  console.log("issueExists result: ", result);
   return result;
 }
 
 export function buildBody(finding: Finding) {
   let result;
   let issue = finding.check.issue;
-  result = "unique_id: " + finding.key;
-  result += "<h3>Description:</h3>";
+  console.log("buildBody issue:", finding);
+  //result = "check_id" + issue.
+  result = "<h3>Description:</h3>";
   result += issue && issue.description ? issue.description : "N/A";
   result += "<h3>Impact Summary:</h3>";
   result += issue && issue.impactSummary ? issue.impactSummary : "N/A";
