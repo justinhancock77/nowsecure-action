@@ -65,22 +65,7 @@ export async function run() {
       state: "all",
     });
 
-    console.log("existing.data.length", existing.data.length);
-    // there are zero existing issues, so create new from findings.
-    if (!existing || existing.data.length === 0) {
-      console.log("no existing issues, create new ones!");
-      for (var finding of report.data.auto.assessments[0].report.findings) {
-        console.log("create a new issue!");
-        await octokit.request("POST /repos/{owner}/{repo}/issues", {
-          owner: repo_owner,
-          repo: repo,
-          title: finding.title,
-          body: buildBody(finding),
-          assignees: [assignees],
-          labels: [finding.severity],
-        });
-      }
-    } else if (existing && existing.data) {
+    if (existing && existing.data) {
       console.log("existing issue found");
       for (var finding of report.data.auto.assessments[0].report.findings) {
         let issueToUpdate = await issueExists(finding, existing.data);
