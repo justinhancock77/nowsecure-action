@@ -59223,12 +59223,13 @@ function run() {
                 }
             }
             else if (existing && existing.data) {
-                console.log("existing issue found");
+                console.log("existing issues found");
                 for (var finding of report.data.auto.assessments[0].report.findings) {
                     let issueToUpdate = yield issueExists(finding, existing.data);
                     console.log("issueToUpdate result:", issueToUpdate);
                     if (issueToUpdate && issueToUpdate > 0) {
                         // re-open the issue
+                        console.log("re-open the issue");
                         yield octokit.request("PATCH /repos/{owner}/{repo}/issues/{issue_number}", {
                             owner: repo_owner,
                             repo: repo,
