@@ -82,7 +82,7 @@ export async function run() {
               state: "open",
             }
           );
-        } else if (issueToUpdate && issueToUpdate == 0) {
+        } else if (issueToUpdate && issueToUpdate === 0) {
           // create a new GH Issue
           console.log("ADD an issue existing before run!");
           await octokit.request("POST /repos/{owner}/{repo}/issues", {
@@ -125,6 +125,7 @@ export async function issueExists(finding: Finding, existing: any) {
       }
     }
   }
+  console.log("returning result:", result);
   return result;
 }
 

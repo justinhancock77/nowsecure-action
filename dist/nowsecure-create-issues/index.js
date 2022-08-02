@@ -59226,7 +59226,7 @@ function run() {
                             state: "open",
                         });
                     }
-                    else if (issueToUpdate && issueToUpdate == 0) {
+                    else if (issueToUpdate && issueToUpdate === 0) {
                         // create a new GH Issue
                         console.log("ADD an issue existing before run!");
                         yield octokit.request("POST /repos/{owner}/{repo}/issues", {
@@ -59270,6 +59270,7 @@ function issueExists(finding, existing) {
                 }
             }
         }
+        console.log("returning result:", result);
         return result;
     });
 }
