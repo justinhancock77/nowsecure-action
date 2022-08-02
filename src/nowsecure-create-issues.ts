@@ -65,7 +65,7 @@ export async function run() {
       "existing issues? ",
       existing && existing.data.length > 0 ? "YES" : "NO"
     );
-    console.log("existing:", JSON.stringify(existing));
+    console.log("existing:", JSON.stringify(existing.data));
 
     // there are zero existing issues, so create new from findings.
     if (!existing || existing.data.length === 0) {
