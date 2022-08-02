@@ -34,6 +34,7 @@
     "@actions/github": "5.0.1",
     "@actions/http-client": "1.0.11",
     "@octokit/action": "^3.18.1",
+    "octokit": "^2.0.4",
     "ripgrep-js": "3.0.0",
     "yaml": "1.10.2"
   }
