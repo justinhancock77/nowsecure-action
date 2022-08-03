@@ -56,12 +56,13 @@ export async function run() {
     }
 
     // pull all the issues we have to determine dupes and to re-open issues
-    const existing = await octokit.request("GET /repos/{owner}/{repo}/issues", {
-      owner: repo_owner,
-      repo: repo,
-      state: "all",
-      per_page: 1000,
-    });
+    const existing = await octokit.request(
+      "GET /repos/{owner}/{repo}/issues?state=all&per_page=3000&state=all&sort=created",
+      {
+        owner: repo_owner,
+        repo: repo,
+      }
+    );
 
     // there are zero existing issues, so create new from findings.
     if (!existing || existing.data.length <= 2) {
@@ -79,7 +80,7 @@ export async function run() {
         sleep(issueInterval); // avoid secondary rate limit
       }
     } else if (existing && existing.data) {
-      console.log("existing issue found");
+      console.log("existing issues found");
       for (var finding of report.data.auto.assessments[0].report.findings) {
         let issueToUpdate = await issueExists(finding, existing.data);
         console.log("issueToUpdate", issueToUpdate);
