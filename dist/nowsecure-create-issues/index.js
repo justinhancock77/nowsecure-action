@@ -59207,6 +59207,7 @@ function run() {
                 owner: repo_owner,
                 repo: repo,
             });
+            console.log("existing issues collection size: ", existing.data.length);
             // there are zero existing issues, so create new from findings.
             if (!existing || existing.data.length <= 2) {
                 console.log("no existing issues, create new ones!");
