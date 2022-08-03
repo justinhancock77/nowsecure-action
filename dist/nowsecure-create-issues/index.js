@@ -59213,7 +59213,7 @@ function run() {
             if (!existing || existing.data.length <= 2) {
                 console.log("no existing issues, create new ones!");
                 for (var finding of report.data.auto.assessments[0].report.findings) {
-                    console.log("create a new issue!");
+                    console.log("create a new issue");
                     yield octokit.request("POST /repos/{owner}/{repo}/issues", {
                         owner: repo_owner,
                         repo: repo,
@@ -59232,7 +59232,7 @@ function run() {
                     console.log("issueToUpdate", issueToUpdate);
                     if (issueToUpdate > 0) {
                         // re-open the issue
-                        console.log("re-open the issue");
+                        console.log("re-open issue:", issueToUpdate);
                         yield octokit.request("PATCH /repos/{owner}/{repo}/issues/{issue_number}", {
                             owner: repo_owner,
                             repo: repo,
@@ -59273,7 +59273,6 @@ function issueExists(finding, existing) {
                 // unique key matches
                 // the issue already exists, check status
                 console.log("Issue title and unique_id match", ex.title + " " + finding.title);
-                // if (ex.state && finding.check.issue && ex.state === "closed") { // dupe issue on closed tickets
                 if (ex.state && ex.state === "closed") {
                     // pass back the id of the issue to be re-opened
                     console.log("re-open issue #: ", ex.number);
