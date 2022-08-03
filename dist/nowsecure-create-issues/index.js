@@ -59209,6 +59209,7 @@ function run() {
             });
             console.log("existing issues collection size: ", existing.data.length);
             // there are zero existing issues, so create new from findings.
+            // collection size is 2 even if no GH Issuees are present
             if (!existing || existing.data.length <= 2) {
                 console.log("no existing issues, create new ones!");
                 for (var finding of report.data.auto.assessments[0].report.findings) {
@@ -59271,8 +59272,9 @@ function issueExists(finding, existing) {
                 ex.body.indexOf(finding.key) >= 0) {
                 // unique key matches
                 // the issue already exists, check status
-                console.log("Issue title and unique_id match");
-                if (ex.state && finding.check.issue && ex.state === "closed") {
+                console.log("Issue title and unique_id match", ex.title + " " + finding.title);
+                // if (ex.state && finding.check.issue && ex.state === "closed") { // dupe issue on closed tickets
+                if (ex.state && ex.state === "closed") {
                     // pass back the id of the issue to be re-opened
                     console.log("re-open issue #: ", ex.number);
                     result = ex.number;
