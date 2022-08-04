@@ -59184,6 +59184,7 @@ function run() {
             // Poll Platform to resolve the report ID to a report.
             // GitHub Actions will handle the timeout for us in the event something goes awry.
             let report = null;
+            let retryCount = 0;
             for (;;) {
                 console.log("Fetch report:", reportId);
                 report = yield ns.pullReport(reportId);
@@ -59198,11 +59199,17 @@ function run() {
                     }
                 }
                 catch (e) {
-                    console.error(e);
+                    console.warn(e);
                     // No report data.
+                    // Retry x number of times for 502.  How to get 502 error?
+                    if (retryCount < 5) {
+                        retryCount++;
+                        continue;
+                    }
                 }
             }
-            // pull all the issues we have to determine dupes and to re-open issues
+            // pull all the issues we have to determine dupes and to re-open issues.
+            // note, per_page is hardcoded to 3000 here.  Ask Keegan.
             const existing = yield octokit.request("GET /repos/{owner}/{repo}/issues?state=all&per_page=3000&state=all&sort=created", {
                 owner: repo_owner,
                 repo: repo,
@@ -59295,6 +59302,8 @@ function buildBody(finding) {
     let result;
     let issue = finding.check.issue;
     result = "unique_id: " + finding.key;
+    result += "<h4>Severity</h3>";
+    result += issue.cvss ? issue.cvss : "N/A";
     result += "<h3>Description:</h3>";
     result += issue && issue.description ? issue.description : "N/A";
     result += "<h3>Impact Summary:</h3>";
