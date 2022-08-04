@@ -57,12 +57,14 @@ export async function run() {
         console.warn(e);
         // No report data.
         // Retry x number of times for 502.  How to get 502 error?
-        if (retryCount < 5) {
-          retryCount++;
-          continue;
-        }
+        // if (retryCount < 5) {
+        //   retryCount++;
+        //   continue;
+        // }
       }
     }
+
+    console.log("findings:", report.data.auto.assessments[0].report.findings);
 
     // pull all the issues we have to determine dupes and to re-open issues.
     // note, per_page is hardcoded to 3000 here.  Ask Keegan.
