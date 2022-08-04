@@ -39,6 +39,10 @@ inputs:
   assignees:
     required: true
     description: "The assignees for newly created issues."
+  minimum_severity:
+    required: true
+    description: "The minimum severity to create GitHub Issues for."
+    default: true
 runs:
   using: "node16"
   main: "../dist/nowsecure-create-issues/index.js"
