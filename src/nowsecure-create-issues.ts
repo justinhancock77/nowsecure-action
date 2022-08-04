@@ -168,7 +168,12 @@ export function isSeverityThresholdMet(
   minimum_severity: String
 ) {
   let result = false;
-  if (finding.severity === minimum_severity) result = true;
+  console.log("minimum severity:", minimum_severity);
+  console.log("finding severity:", finding.severity);
+
+  if (finding.severity === minimum_severity) {
+    result = true;
+  }
   return result;
 }
 
