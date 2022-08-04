@@ -59210,7 +59210,7 @@ function run() {
                     // }
                 }
             }
-            console.log("findings:", report.data.auto.assessments[0].report.findings);
+            console.log("findings:", report.data.auto.assessments[0].report);
             // pull all the issues we have to determine dupes and to re-open issues.
             // note, per_page is hardcoded to 3000 here.  Ask Keegan.
             const existing = yield octokit.request("GET /repos/{owner}/{repo}/issues?state=all&per_page=3000&state=all&sort=created", {
