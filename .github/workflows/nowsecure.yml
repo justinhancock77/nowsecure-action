@@ -70,9 +70,10 @@ jobs:
         uses: justinhancock77/nowsecure-action/create-issues@main
         timeout-minutes: 30
         with:
-          report_id: "b1de7c6e-0c48-11ed-8e5b-57b2256adfa9"
+          report_id: "edb0b006-133f-11ed-8e5c-6364b5054426" # 158 findings, 9 medium / warn findings
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           platform-token: ${{ secrets.NS_TOKEN }}
           repo: "nowsecure-action"
           repo_owner: "justinhancock77"
           assignees: "justinhancock77"
+          minimum_severity: "Warn"

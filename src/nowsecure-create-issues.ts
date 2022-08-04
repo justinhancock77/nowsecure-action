@@ -29,6 +29,7 @@ export async function run() {
     const assignees = core.getInput("assignees");
     const repo = core.getInput("repo");
     const repo_owner = core.getInput("repo_owner");
+    const minimum_severity = core.getInput("min_severity");
 
     const ns = new NowSecure(platformToken, apiUrl, labApiUrl);
     let pollInterval = 60000;
@@ -84,40 +85,42 @@ export async function run() {
           title: finding.title,
           body: buildBody(finding),
           assignees: [assignees],
-          labels: [finding.severity],
+          //labels: [finding.severity], never use labels for now
         });
         sleep(issueInterval); // avoid secondary rate limit
       }
     } else if (existing && existing.data) {
       console.log("existing issues found");
       for (var finding of report.data.auto.assessments[0].report.findings) {
-        let issueToUpdate = await issueExists(finding, existing.data);
-        console.log("issueToUpdate", issueToUpdate);
-        if (issueToUpdate > 0) {
-          // re-open the issue
-          console.log("re-open issue:", issueToUpdate);
-          await octokit.request(
-            "PATCH /repos/{owner}/{repo}/issues/{issue_number}",
-            {
+        if (isSeverityThresholdMet(finding, minimum_severity)) {
+          let issueToUpdate = await issueExists(finding, existing.data);
+          console.log("issueToUpdate", issueToUpdate);
+          if (issueToUpdate > 0) {
+            // re-open the issue
+            console.log("re-open issue:", issueToUpdate);
+            await octokit.request(
+              "PATCH /repos/{owner}/{repo}/issues/{issue_number}",
+              {
+                owner: repo_owner,
+                repo: repo,
+                issue_number: issueToUpdate,
+                state: "open",
+              }
+            );
+            sleep(issueInterval); // avoid secondary rate limit
+          } else if (issueToUpdate === 0) {
+            // create a new GH Issue
+            console.log("create new issue");
+            await octokit.request("POST /repos/{owner}/{repo}/issues", {
               owner: repo_owner,
               repo: repo,
-              issue_number: issueToUpdate,
-              state: "open",
-            }
-          );
-          sleep(issueInterval); // avoid secondary rate limit
-        } else if (issueToUpdate === 0) {
-          // create a new GH Issue
-          console.log("create new issue");
-          await octokit.request("POST /repos/{owner}/{repo}/issues", {
-            owner: repo_owner,
-            repo: repo,
-            title: finding.title,
-            body: buildBody(finding),
-            assignees: [assignees],
-            labels: [finding.severity],
-          });
-          sleep(issueInterval); // avoid secondary rate limit
+              title: finding.title,
+              body: buildBody(finding),
+              assignees: [assignees],
+              labels: [finding.severity],
+            });
+            sleep(issueInterval); // avoid secondary rate limit
+          }
         }
       }
     }
@@ -158,12 +161,22 @@ export async function issueExists(finding: Finding, existing: any) {
   return result;
 }
 
+export function isSeverityThresholdMet(
+  finding: Finding,
+  minimum_severity: String
+) {
+  let result = false;
+  if (finding.severity === minimum_severity) result = true;
+  return result;
+}
+
 export function buildBody(finding: Finding) {
   let result;
+  let severity = finding.severity;
   let issue = finding.check.issue;
   result = "unique_id: " + finding.key;
   result += "<h4>Severity</h3>";
-  result += issue && issue.cvss ? issue.cvss : "N/A";
+  result += severity ? severity : "N/A";
   result += "<h3>Description:</h3>";
   result += issue && issue.description ? issue.description : "N/A";
   result += "<h3>Impact Summary:</h3>";

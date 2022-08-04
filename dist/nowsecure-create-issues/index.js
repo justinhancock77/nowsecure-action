@@ -59157,7 +59157,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.buildBody = exports.issueExists = exports.run = void 0;
+exports.buildBody = exports.isSeverityThresholdMet = exports.issueExists = exports.run = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const nowsecure_client_1 = __nccwpck_require__(4619);
 const action_1 = __nccwpck_require__(1231);
@@ -59178,6 +59178,7 @@ function run() {
             const assignees = core.getInput("assignees");
             const repo = core.getInput("repo");
             const repo_owner = core.getInput("repo_owner");
+            const minimum_severity = core.getInput("min_severity");
             const ns = new nowsecure_client_1.NowSecure(platformToken, apiUrl, labApiUrl);
             let pollInterval = 60000;
             let issueInterval = 1000;
@@ -59227,7 +59228,7 @@ function run() {
                         title: finding.title,
                         body: buildBody(finding),
                         assignees: [assignees],
-                        labels: [finding.severity],
+                        //labels: [finding.severity], never use labels for now
                     });
                     sleep(issueInterval); // avoid secondary rate limit
                 }
@@ -59235,31 +59236,33 @@ function run() {
             else if (existing && existing.data) {
                 console.log("existing issues found");
                 for (var finding of report.data.auto.assessments[0].report.findings) {
-                    let issueToUpdate = yield issueExists(finding, existing.data);
-                    console.log("issueToUpdate", issueToUpdate);
-                    if (issueToUpdate > 0) {
-                        // re-open the issue
-                        console.log("re-open issue:", issueToUpdate);
-                        yield octokit.request("PATCH /repos/{owner}/{repo}/issues/{issue_number}", {
-                            owner: repo_owner,
-                            repo: repo,
-                            issue_number: issueToUpdate,
-                            state: "open",
-                        });
-                        sleep(issueInterval); // avoid secondary rate limit
-                    }
-                    else if (issueToUpdate === 0) {
-                        // create a new GH Issue
-                        console.log("create new issue");
-                        yield octokit.request("POST /repos/{owner}/{repo}/issues", {
-                            owner: repo_owner,
-                            repo: repo,
-                            title: finding.title,
-                            body: buildBody(finding),
-                            assignees: [assignees],
-                            labels: [finding.severity],
-                        });
-                        sleep(issueInterval); // avoid secondary rate limit
+                    if (isSeverityThresholdMet(finding, minimum_severity)) {
+                        let issueToUpdate = yield issueExists(finding, existing.data);
+                        console.log("issueToUpdate", issueToUpdate);
+                        if (issueToUpdate > 0) {
+                            // re-open the issue
+                            console.log("re-open issue:", issueToUpdate);
+                            yield octokit.request("PATCH /repos/{owner}/{repo}/issues/{issue_number}", {
+                                owner: repo_owner,
+                                repo: repo,
+                                issue_number: issueToUpdate,
+                                state: "open",
+                            });
+                            sleep(issueInterval); // avoid secondary rate limit
+                        }
+                        else if (issueToUpdate === 0) {
+                            // create a new GH Issue
+                            console.log("create new issue");
+                            yield octokit.request("POST /repos/{owner}/{repo}/issues", {
+                                owner: repo_owner,
+                                repo: repo,
+                                title: finding.title,
+                                body: buildBody(finding),
+                                assignees: [assignees],
+                                labels: [finding.severity],
+                            });
+                            sleep(issueInterval); // avoid secondary rate limit
+                        }
                     }
                 }
             }
@@ -59298,12 +59301,20 @@ function issueExists(finding, existing) {
     });
 }
 exports.issueExists = issueExists;
+function isSeverityThresholdMet(finding, minimum_severity) {
+    let result = false;
+    if (finding.severity === minimum_severity)
+        result = true;
+    return result;
+}
+exports.isSeverityThresholdMet = isSeverityThresholdMet;
 function buildBody(finding) {
     let result;
+    let severity = finding.severity;
     let issue = finding.check.issue;
     result = "unique_id: " + finding.key;
     result += "<h4>Severity</h3>";
-    result += issue && issue.cvss ? issue.cvss : "N/A";
+    result += severity ? severity : "N/A";
     result += "<h3>Description:</h3>";
     result += issue && issue.description ? issue.description : "N/A";
     result += "<h3>Impact Summary:</h3>";
