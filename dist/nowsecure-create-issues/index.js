@@ -59303,7 +59303,7 @@ function buildBody(finding) {
     let issue = finding.check.issue;
     result = "unique_id: " + finding.key;
     result += "<h4>Severity</h3>";
-    result += issue.cvss ? issue.cvss : "N/A";
+    result += issue && issue.cvss ? issue.cvss : "N/A";
     result += "<h3>Description:</h3>";
     result += issue && issue.description ? issue.description : "N/A";
     result += "<h3>Impact Summary:</h3>";
