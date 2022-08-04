@@ -76,4 +76,4 @@ jobs:
           repo: "nowsecure-action"
           repo_owner: "justinhancock77"
           assignees: "justinhancock77"
-          minimum_severity: "Warn"
+          minimum_severity: "warn"

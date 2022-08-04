@@ -59178,7 +59178,8 @@ function run() {
             const assignees = core.getInput("assignees");
             const repo = core.getInput("repo");
             const repo_owner = core.getInput("repo_owner");
-            const minimum_severity = core.getInput("min_severity");
+            const minimum_severity = core.getInput("minimum_severity");
+            console.log("minimum_severity:", minimum_severity);
             const ns = new nowsecure_client_1.NowSecure(platformToken, apiUrl, labApiUrl);
             let pollInterval = 60000;
             let issueInterval = 1000;
