@@ -59221,16 +59221,18 @@ function run() {
             if (!existing || existing.data.length <= 2) {
                 console.log("no existing issues, create new ones!");
                 for (var finding of report.data.auto.assessments[0].report.findings) {
-                    console.log("create a new issue");
-                    yield octokit.request("POST /repos/{owner}/{repo}/issues", {
-                        owner: repo_owner,
-                        repo: repo,
-                        title: finding.title,
-                        body: buildBody(finding),
-                        assignees: [assignees],
-                        //labels: [finding.severity], never use labels for now
-                    });
-                    sleep(issueInterval); // avoid secondary rate limit
+                    if (isSeverityThresholdMet(finding, minimum_severity)) {
+                        console.log("create a new issue");
+                        yield octokit.request("POST /repos/{owner}/{repo}/issues", {
+                            owner: repo_owner,
+                            repo: repo,
+                            title: finding.title,
+                            body: buildBody(finding),
+                            assignees: [assignees],
+                            //labels: [finding.severity], never use labels for now
+                        });
+                        sleep(issueInterval); // avoid secondary rate limit
+                    }
                 }
             }
             else if (existing && existing.data) {
