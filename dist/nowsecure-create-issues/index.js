@@ -59239,6 +59239,7 @@ function run() {
             else if (existing && existing.data) {
                 console.log("existing issues found");
                 for (var finding of report.data.auto.assessments[0].report.findings) {
+                    console.log("finding:", finding);
                     if (isSeverityThresholdMet(finding, minimum_severity)) {
                         let issueToUpdate = yield issueExists(finding, existing.data);
                         console.log("issueToUpdate", issueToUpdate);
