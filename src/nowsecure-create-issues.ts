@@ -82,8 +82,13 @@ export async function run() {
         console.log("finding title:", finding.title);
         console.log("finding severity:", finding.severity);
         console.log(
-          "finding check issue warn:",
+          "WARN:",
           JSON.stringify(finding.check.issue ? finding.check.issue.warn : "")
+        );
+
+        console.log(
+          "CVSS:",
+          JSON.stringify(finding.check.issue ? finding.check.issue.cvss : "")
         );
 
         if (isSeverityThresholdMet(finding, minimum_severity)) {
