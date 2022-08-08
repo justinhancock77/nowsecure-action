@@ -92,19 +92,19 @@ export async function run() {
         );
 
         if (isSeverityThresholdMet(finding, minimum_severity)) {
-          // console.log("create new issue");
-          // console.log(
-          //   "finding title / severity / cvss ",
-          //   finding.title + " " + finding.severity
-          // );
-          // await octokit.request("POST /repos/{owner}/{repo}/issues", {
-          //   owner: repo_owner,
-          //   repo: repo,
-          //   title: finding.title,
-          //   body: buildBody(finding),
-          //   assignees: [assignees],
-          //   //labels: [finding.severity], never use labels for now
-          // });
+          console.log("create new issue");
+          console.log(
+            "finding title / severity / cvss ",
+            finding.title + " " + finding.severity
+          );
+          await octokit.request("POST /repos/{owner}/{repo}/issues", {
+            owner: repo_owner,
+            repo: repo,
+            title: finding.title,
+            body: buildBody(finding),
+            assignees: [assignees],
+            //labels: [finding.severity], never use labels for now
+          });
           sleep(issueInterval); // avoid secondary rate limit
         }
       }
@@ -126,15 +126,15 @@ export async function run() {
           if (issueToUpdate > 0) {
             // re-open the issue
             console.log("re-open issue:", issueToUpdate);
-            // await octokit.request(
-            //   "PATCH /repos/{owner}/{repo}/issues/{issue_number}",
-            //   {
-            //     owner: repo_owner,
-            //     repo: repo,
-            //     issue_number: issueToUpdate,
-            //     state: "open",
-            //   }
-            // );
+            await octokit.request(
+              "PATCH /repos/{owner}/{repo}/issues/{issue_number}",
+              {
+                owner: repo_owner,
+                repo: repo,
+                issue_number: issueToUpdate,
+                state: "open",
+              }
+            );
             sleep(issueInterval); // avoid secondary rate limit
           } else if (issueToUpdate === 0) {
             // create a new GH Issue
@@ -143,14 +143,14 @@ export async function run() {
               "finding title / severity",
               finding.title + " " + finding.severity
             );
-            // await octokit.request("POST /repos/{owner}/{repo}/issues", {
-            //   owner: repo_owner,
-            //   repo: repo,
-            //   title: finding.title,
-            //   body: buildBody(finding),
-            //   assignees: [assignees],
-            //   labels: [finding.severity],
-            // });
+            await octokit.request("POST /repos/{owner}/{repo}/issues", {
+              owner: repo_owner,
+              repo: repo,
+              title: finding.title,
+              body: buildBody(finding),
+              assignees: [assignees],
+              labels: [finding.severity],
+            });
             sleep(issueInterval); // avoid secondary rate limit
           }
         }
@@ -197,13 +197,10 @@ export function isSeverityThresholdMet(
   finding: Finding,
   minimum_severity: String
 ) {
-  let result = true;
-  //console.log("minimum severity:", minimum_severity);
-  //console.log("finding severity:", finding.severity);
-
-  // if (finding.severity === minimum_severity) {
-  //   result = true;
-  // }
+  let result = false;
+  if (finding.check.issue && finding.check.issue.warn) {
+    result = true;
+  }
   return result;
 }
 
