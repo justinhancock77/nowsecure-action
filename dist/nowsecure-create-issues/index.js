@@ -59218,7 +59218,10 @@ function run() {
             if (!existing || existing.data.length <= 2) {
                 console.log("no existing issues, create new ones!");
                 for (var finding of report.data.auto.assessments[0].report.findings) {
-                    console.log("finding: ", finding);
+                    console.log("finding title:", finding.title);
+                    console.log("finding severity:", finding.severity);
+                    console.log("finding context:", JSON.stringify(finding.context));
+                    console.log("finding check issue:", finding.check.issue ? finding.check.issue : "NONE");
                     if (isSeverityThresholdMet(finding, minimum_severity)) {
                         // console.log("create new issue");
                         // console.log(
