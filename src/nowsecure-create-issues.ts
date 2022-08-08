@@ -79,12 +79,13 @@ export async function run() {
     if (!existing || existing.data.length <= 2) {
       console.log("no existing issues, create new ones!");
       for (var finding of report.data.auto.assessments[0].report.findings) {
+        console.log("finding: ", finding);
         if (isSeverityThresholdMet(finding, minimum_severity)) {
-          console.log("create new issue");
-          console.log(
-            "finding title / severity / cvss ",
-            finding.title + " " + finding.severity
-          );
+          // console.log("create new issue");
+          // console.log(
+          //   "finding title / severity / cvss ",
+          //   finding.title + " " + finding.severity
+          // );
           // await octokit.request("POST /repos/{owner}/{repo}/issues", {
           //   owner: repo_owner,
           //   repo: repo,
@@ -100,6 +101,7 @@ export async function run() {
       console.log("existing issues found");
       for (var finding of report.data.auto.assessments[0].report.findings) {
         console.log("finding:", finding);
+        console.log(" ");
         if (isSeverityThresholdMet(finding, minimum_severity)) {
           let issueToUpdate = await issueExists(finding, existing.data);
           console.log("issueToUpdate", issueToUpdate);
@@ -179,7 +181,7 @@ export function isSeverityThresholdMet(
 ) {
   let result = true;
   //console.log("minimum severity:", minimum_severity);
-  console.log("finding severity:", finding.severity);
+  //console.log("finding severity:", finding.severity);
 
   // if (finding.severity === minimum_severity) {
   //   result = true;
