@@ -59220,9 +59220,7 @@ function run() {
                 for (var finding of report.data.auto.assessments[0].report.findings) {
                     if (isSeverityThresholdMet(finding, minimum_severity)) {
                         console.log("create new issue");
-                        console.log("finding title / severity / cvss ", finding.title + " " + finding.severity + " " + finding.check.issue
-                            ? finding.check.issue.cvss
-                            : "no cvss");
+                        console.log("finding title / severity / cvss ", finding.title + " " + finding.severity);
                         // await octokit.request("POST /repos/{owner}/{repo}/issues", {
                         //   owner: repo_owner,
                         //   repo: repo,

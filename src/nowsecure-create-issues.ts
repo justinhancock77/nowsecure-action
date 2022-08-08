@@ -83,9 +83,7 @@ export async function run() {
           console.log("create new issue");
           console.log(
             "finding title / severity / cvss ",
-            finding.title + " " + finding.severity + " " + finding.check.issue
-              ? finding.check.issue.cvss
-              : "no cvss"
+            finding.title + " " + finding.severity
           );
           // await octokit.request("POST /repos/{owner}/{repo}/issues", {
           //   owner: repo_owner,
