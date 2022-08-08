@@ -81,7 +81,10 @@ export async function run() {
       for (var finding of report.data.auto.assessments[0].report.findings) {
         console.log("finding title:", finding.title);
         console.log("finding severity:", finding.severity);
-        console.log("finding context:", JSON.stringify(finding.context));
+        console.log(
+          "finding check issue:",
+          JSON.stringify(finding.check.issue ? finding.check.issue : "")
+        );
         console.log(
           "finding check issue:",
           finding.check.issue ? finding.check.issue : "NONE"
