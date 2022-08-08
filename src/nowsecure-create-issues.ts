@@ -39,7 +39,6 @@ export async function run() {
     // Poll Platform to resolve the report ID to a report.
     // GitHub Actions will handle the timeout for us in the event something goes awry.
     let report = null;
-    let retryCount = 0;
 
     for (;;) {
       console.log("Fetch report:", reportId);
@@ -54,16 +53,15 @@ export async function run() {
           await sleep(pollInterval);
         }
       } catch (e) {
-        console.warn(e);
+        console.error(e);
         // No report data.
-        // Retry x number of times for 502.  How to get 502 error?
-        // if (retryCount < 5) {
-        //   retryCount++;
-        //   continue;
-        // }
       }
     }
 
+    console.log(
+      "total number of findings: ",
+      report.data.auto.assessments[0].report.findings.length
+    );
     console.log("findings:", report.data.auto.assessments[0].report);
 
     // pull all the issues we have to determine dupes and to re-open issues.
