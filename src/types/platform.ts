@@ -86,6 +86,7 @@ export interface Finding {
   };
   check: {
     issue: {
+      warn: boolean;
       title: string;
       description: string | null;
       impactSummary: string | null;
