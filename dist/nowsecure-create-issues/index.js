@@ -59219,15 +59219,20 @@ function run() {
                 console.log("no existing issues, create new ones!");
                 for (var finding of report.data.auto.assessments[0].report.findings) {
                     if (isSeverityThresholdMet(finding, minimum_severity)) {
-                        console.log("create a new issue");
-                        yield octokit.request("POST /repos/{owner}/{repo}/issues", {
-                            owner: repo_owner,
-                            repo: repo,
-                            title: finding.title,
-                            body: buildBody(finding),
-                            assignees: [assignees],
-                            //labels: [finding.severity], never use labels for now
-                        });
+                        console.log("create new issue");
+                        console.log("finding title / severity / cvss ", finding.title +
+                            " " +
+                            finding.severity +
+                            " " +
+                            finding.check.issue.cvss);
+                        // await octokit.request("POST /repos/{owner}/{repo}/issues", {
+                        //   owner: repo_owner,
+                        //   repo: repo,
+                        //   title: finding.title,
+                        //   body: buildBody(finding),
+                        //   assignees: [assignees],
+                        //   //labels: [finding.severity], never use labels for now
+                        // });
                         sleep(issueInterval); // avoid secondary rate limit
                     }
                 }
@@ -59242,25 +59247,29 @@ function run() {
                         if (issueToUpdate > 0) {
                             // re-open the issue
                             console.log("re-open issue:", issueToUpdate);
-                            yield octokit.request("PATCH /repos/{owner}/{repo}/issues/{issue_number}", {
-                                owner: repo_owner,
-                                repo: repo,
-                                issue_number: issueToUpdate,
-                                state: "open",
-                            });
+                            // await octokit.request(
+                            //   "PATCH /repos/{owner}/{repo}/issues/{issue_number}",
+                            //   {
+                            //     owner: repo_owner,
+                            //     repo: repo,
+                            //     issue_number: issueToUpdate,
+                            //     state: "open",
+                            //   }
+                            // );
                             sleep(issueInterval); // avoid secondary rate limit
                         }
                         else if (issueToUpdate === 0) {
                             // create a new GH Issue
                             console.log("create new issue");
-                            yield octokit.request("POST /repos/{owner}/{repo}/issues", {
-                                owner: repo_owner,
-                                repo: repo,
-                                title: finding.title,
-                                body: buildBody(finding),
-                                assignees: [assignees],
-                                labels: [finding.severity],
-                            });
+                            console.log("finding title / severity", finding.title + " " + finding.severity);
+                            // await octokit.request("POST /repos/{owner}/{repo}/issues", {
+                            //   owner: repo_owner,
+                            //   repo: repo,
+                            //   title: finding.title,
+                            //   body: buildBody(finding),
+                            //   assignees: [assignees],
+                            //   labels: [finding.severity],
+                            // });
                             sleep(issueInterval); // avoid secondary rate limit
                         }
                     }
@@ -59303,7 +59312,7 @@ function issueExists(finding, existing) {
 exports.issueExists = issueExists;
 function isSeverityThresholdMet(finding, minimum_severity) {
     let result = false;
-    console.log("minimum severity:", minimum_severity);
+    //console.log("minimum severity:", minimum_severity);
     console.log("finding severity:", finding.severity);
     if (finding.severity === minimum_severity) {
         result = true;
