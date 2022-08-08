@@ -62,7 +62,7 @@ export async function run() {
       "total number of findings: ",
       report.data.auto.assessments[0].report.findings.length
     );
-    console.log("findings:", report.data.auto.assessments[0].report);
+    //console.log("findings:", report.data.auto.assessments[0].report);
 
     // pull all the issues we have to determine dupes and to re-open issues.
     // note, per_page is hardcoded to 3000 here.  Ask Keegan.
