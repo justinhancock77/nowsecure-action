@@ -33,6 +33,7 @@ const platformGql = (reportId: string): string => `query {
           kind
           key
           title
+          warn
           summary
           affected
           severity
