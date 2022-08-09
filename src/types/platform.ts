@@ -87,6 +87,7 @@ export interface Finding {
   check: {
     issue: {
       warn: boolean;
+      vuln: boolean;
       title: string;
       description: string | null;
       impactSummary: string | null;
