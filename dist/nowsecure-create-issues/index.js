@@ -59029,6 +59029,7 @@ const platformGql = (reportId) => `query {
           summary
           affected
           severity
+          unique_vulnerability_id
           context {
             fields
             rows
@@ -59037,7 +59038,6 @@ const platformGql = (reportId) => `query {
             issue {
               title
               warn
-              vuln
               description
               impactSummary
               stepsToReproduce
