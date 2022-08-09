@@ -76,7 +76,7 @@ export async function run() {
     console.log("existing issues collection size: ", existing.data.length);
     // there are zero existing issues, so create new from findings.
     // collection size is 2 even if no GH Issuees are present
-    if (!existing || existing.data.length <= 2) {
+    if (!existing || existing.data.length < 0) {
       //console.log("no existing issues, create new ones!");
       for (var finding of report.data.auto.assessments[0].report.findings) {
         console.log("finding title:", finding.title);
