@@ -59225,6 +59225,7 @@ function run() {
                     console.log("finding severity:", finding.severity);
                     console.log("WARN:", JSON.stringify(finding.check.issue ? finding.check.issue.warn : ""));
                     console.log("CVSS:", JSON.stringify(finding.check.issue ? finding.check.issue.cvss : ""));
+                    console.log("unique vuln id", finding.uniqueVulnerabilityId);
                     if (isSeverityThresholdMet(finding, minimum_severity)) {
                         console.log("create new issue");
                         console.log("finding title / severity / cvss ", finding.title + " " + finding.severity);
@@ -59247,6 +59248,7 @@ function run() {
                     console.log("finding severity:", finding.severity);
                     console.log("WARN:", JSON.stringify(finding.check.issue ? finding.check.issue.warn : ""));
                     console.log("CVSS:", JSON.stringify(finding.check.issue ? finding.check.issue.cvss : ""));
+                    console.log("unique vuln id", finding.uniqueVulnerabilityId);
                     console.log("/n");
                     console.log("/n");
                     if (isSeverityThresholdMet(finding, minimum_severity)) {
