@@ -36,7 +36,7 @@ const platformGql = (reportId: string): string => `query {
           summary
           affected
           severity
-          unique_vulnerability_id
+          uniqueVulnerabilityId
           context {
             fields
             rows

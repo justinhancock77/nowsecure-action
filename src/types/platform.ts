@@ -76,7 +76,7 @@ export interface Finding {
   summary: string | null;
   affected: boolean;
   severity: Severity;
-  unique_vulnerability_id: string;
+  uniqueVulnerabilityId: string;
   context: {
     fields: {
       [key: string]: { title: string };
