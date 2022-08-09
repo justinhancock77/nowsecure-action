@@ -59037,6 +59037,7 @@ const platformGql = (reportId) => `query {
             issue {
               title
               warn
+              vuln
               description
               impactSummary
               stepsToReproduce
@@ -59215,7 +59216,8 @@ function run() {
             });
             console.log("existing issues collection size: ", existing.data.length);
             // there are zero existing issues, so create new from findings.
-            // collection size is 2 even if no GH Issuees are present
+            // Note:  if there are pull requests open OR closed, they will be returned
+            // in the result set of the /issues API call.
             if (!existing || existing.data.length < 0) {
                 //console.log("no existing issues, create new ones!");
                 for (var finding of report.data.auto.assessments[0].report.findings) {

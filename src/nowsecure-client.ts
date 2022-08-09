@@ -44,6 +44,7 @@ const platformGql = (reportId: string): string => `query {
             issue {
               title
               warn
+              vuln
               description
               impactSummary
               stepsToReproduce

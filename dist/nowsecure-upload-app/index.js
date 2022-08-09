@@ -1641,6 +1641,7 @@ const platformGql = (reportId) => `query {
             issue {
               title
               warn
+              vuln
               description
               impactSummary
               stepsToReproduce
