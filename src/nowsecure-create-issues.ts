@@ -126,8 +126,8 @@ export async function run() {
           JSON.stringify(finding.check.issue ? finding.check.issue.cvss : "")
         );
         console.log("unique vuln id", finding.uniqueVulnerabilityId);
-        console.log("/n");
-        console.log("/n");
+        console.log(" ");
+        console.log(" ");
         if (isSeverityThresholdMet(finding, minimum_severity)) {
           let issueToUpdate = await issueExists(finding, existing.data);
           console.log("issueToUpdate", issueToUpdate);
