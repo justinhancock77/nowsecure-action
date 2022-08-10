@@ -1642,7 +1642,6 @@ const platformGql = (reportId) => `query {
             issue {
               title
               warn
-              vulnerability
               description
               impactSummary
               stepsToReproduce
