@@ -28,7 +28,7 @@ describe("SARIF conversion", () => {
         path.join(__dirname, "resources", "response_200.json")
       );
 
-    const report = await ns.pullReport(assessmentId);
+    const report = await ns.pullReport(assessmentId); // this is mocked via /graphql
     const sarif = await convertToSarif(report);
     expect(sarif).toMatchSnapshot();
   });

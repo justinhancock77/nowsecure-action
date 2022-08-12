@@ -4,11 +4,13 @@
  * SPDX-License-Identifier: MIT
  */
 
+import { backOff } from "exponential-backoff";
 import type { DependencySnapshot, Manifest } from "./types/dependency-snapshot";
 import type { Deputy } from "./types/deputy";
 import * as client from "@actions/http-client";
 import { version } from "./nowsecure-version";
 import { USER_AGENT } from "./nowsecure-client";
+import { clear } from "console";
 
 /**
  * Contains environmental information for conversion routines.
@@ -123,6 +125,42 @@ export async function submitSnapshotData(
   { repo: { owner, repo } }: ActionContext,
   token: string
 ) {
+  try {
+    console.log("call submitWithRetry via backoff");
+    const response = await backOff(
+      () => submitSnapshotWithRetry(owner, repo, data, token),
+      {
+        delayFirstAttempt: false,
+        numOfAttempts: 10, // make this a property
+        maxDelay: 1000,
+        startingDelay: 0,
+        //timeMultiple: 1.5,
+        retry: (e: any, attemptNumber: number) => retryMe(e, attemptNumber),
+      }
+    );
+    // console.log("response:", response);
+    // return response;
+    // process response
+  } catch (e) {
+    console.log("exception on submitSnapshotData", e);
+    // handle error
+    //return "max retry attempts reached";
+  }
+}
+
+export async function retryMe(e: any, attemptNumber: number) {
+  console.log("HERE", e);
+  console.log("retry FUNCTION");
+  return false;
+}
+
+export async function submitSnapshotWithRetry(
+  owner: string,
+  repo: string,
+  data: DependencySnapshot,
+  token: string
+) {
+  console.log("submitSnapshotWithRetry");
   const httpClient = new client.HttpClient(USER_AGENT);
   const r = await httpClient.post(
     snapshotUrl(owner, repo),
@@ -132,9 +170,12 @@ export async function submitSnapshotData(
     }
   );
 
+  return;
   if (r.message.statusCode !== 201) {
-    throw new Error(
-      `Snapshot request failed with status ${r.message.statusCode}`
-    );
+    //return 502;
+    //return r.message.statusCode;
+    // return new Error(
+    //   `Snapshot request failed with status ${r.message.statusCode}`
+    // );
   }
 }
