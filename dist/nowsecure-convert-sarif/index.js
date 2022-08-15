@@ -10693,7 +10693,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.submitSnapshotWithRetry = exports.retryMe = exports.submitSnapshotData = exports.convertToSnapshot = void 0;
+exports.submitSnapshotWithRetry = exports.shouldRetry = exports.submitSnapshotData = exports.convertToSnapshot = void 0;
 const exponential_backoff_1 = __nccwpck_require__(3183);
 const client = __importStar(__nccwpck_require__(9925));
 const nowsecure_version_1 = __nccwpck_require__(1328);
@@ -10780,34 +10780,30 @@ function submitSnapshotData(data, { repo: { owner, repo } }, token) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             console.log("call submitWithRetry via backoff");
-            const response = yield (0, exponential_backoff_1.backOff)(() => submitSnapshotWithRetry(owner, repo, data, token), {
+            const response = yield (0, exponential_backoff_1.backOff)(() => __awaiter(this, void 0, void 0, function* () { return yield submitSnapshotWithRetry(owner, repo, data, token); }), {
                 delayFirstAttempt: false,
                 numOfAttempts: 10,
                 maxDelay: 1000,
                 startingDelay: 0,
-                //timeMultiple: 1.5,
-                retry: (e, attemptNumber) => retryMe(e, attemptNumber),
+                timeMultiple: 1.5,
+                retry: (e, attemptNumber) => __awaiter(this, void 0, void 0, function* () { return shouldRetry(e, attemptNumber); }),
             });
-            // console.log("response:", response);
-            // return response;
-            // process response
+            console.log("response", response);
         }
         catch (e) {
             console.log("exception on submitSnapshotData", e);
-            // handle error
-            //return "max retry attempts reached";
         }
     });
 }
 exports.submitSnapshotData = submitSnapshotData;
-function retryMe(e, attemptNumber) {
+function shouldRetry(e, attemptNumber) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log("HERE", e);
-        console.log("retry FUNCTION");
-        return false;
+        console.log("shouldRetry", e);
+        console.log("attemptNumber", attemptNumber);
+        return true;
     });
 }
-exports.retryMe = retryMe;
+exports.shouldRetry = shouldRetry;
 function submitSnapshotWithRetry(owner, repo, data, token) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log("submitSnapshotWithRetry");
@@ -10815,13 +10811,12 @@ function submitSnapshotWithRetry(owner, repo, data, token) {
         const r = yield httpClient.post(snapshotUrl(owner, repo), JSON.stringify(data), {
             Authorization: `token ${token}`,
         });
-        return;
+        console.log("response code from submitSnapshitWithRetry", r.message.statusCode);
         if (r.message.statusCode !== 201) {
-            //return 502;
-            //return r.message.statusCode;
             // return new Error(
             //   `Snapshot request failed with status ${r.message.statusCode}`
             // );
+            throw "Snapshot request failed with status ${r.message.statusCode}";
         }
     });
 }

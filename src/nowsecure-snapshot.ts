@@ -10,7 +10,6 @@ import type { Deputy } from "./types/deputy";
 import * as client from "@actions/http-client";
 import { version } from "./nowsecure-version";
 import { USER_AGENT } from "./nowsecure-client";
-import { clear } from "console";
 
 /**
  * Contains environmental information for conversion routines.
@@ -128,30 +127,27 @@ export async function submitSnapshotData(
   try {
     console.log("call submitWithRetry via backoff");
     const response = await backOff(
-      () => submitSnapshotWithRetry(owner, repo, data, token),
+      async () => await submitSnapshotWithRetry(owner, repo, data, token),
       {
         delayFirstAttempt: false,
         numOfAttempts: 10, // make this a property
         maxDelay: 1000,
         startingDelay: 0,
-        //timeMultiple: 1.5,
-        retry: (e: any, attemptNumber: number) => retryMe(e, attemptNumber),
+        timeMultiple: 1.5,
+        retry: async (e, attemptNumber) => shouldRetry(e, attemptNumber),
       }
     );
-    // console.log("response:", response);
-    // return response;
-    // process response
+
+    console.log("response", response);
   } catch (e) {
     console.log("exception on submitSnapshotData", e);
-    // handle error
-    //return "max retry attempts reached";
   }
 }
 
-export async function retryMe(e: any, attemptNumber: number) {
-  console.log("HERE", e);
-  console.log("retry FUNCTION");
-  return false;
+export async function shouldRetry(e: any, attemptNumber: number) {
+  console.log("shouldRetry", e);
+  console.log("attemptNumber", attemptNumber);
+  return true;
 }
 
 export async function submitSnapshotWithRetry(
@@ -170,12 +166,15 @@ export async function submitSnapshotWithRetry(
     }
   );
 
-  return;
+  console.log(
+    "response code from submitSnapshitWithRetry",
+    r.message.statusCode
+  );
+
   if (r.message.statusCode !== 201) {
-    //return 502;
-    //return r.message.statusCode;
     // return new Error(
     //   `Snapshot request failed with status ${r.message.statusCode}`
     // );
+    throw "Snapshot request failed with status ${r.message.statusCode}";
   }
 }
