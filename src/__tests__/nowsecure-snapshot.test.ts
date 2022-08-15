@@ -49,6 +49,8 @@ describe("Snapshot conversion", () => {
     );
     const parsed = JSON.parse(data.toString());
     const snapshot = convertToSnapshot(parsed as Deputy, "", context);
+    // how do I mock this to then run expect / assertions on the number
+    // of times it ran the retry?
     //const spy = jest.spyOn(nowsecure-snapshot, 'submitSnapshotData');
 
     //  in real life, when submitSnapshotData is called, we will reference the GH token
