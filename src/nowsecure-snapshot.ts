@@ -134,7 +134,7 @@ export async function submitSnapshotData(
         maxDelay: 1000,
         startingDelay: 0,
         timeMultiple: 1.5,
-        retry: async (e, attemptNumber) => shouldRetry(e, attemptNumber),
+        retry: async (e, attemptNumber) => await shouldRetry(e, attemptNumber),
       }
     );
 

@@ -10786,7 +10786,7 @@ function submitSnapshotData(data, { repo: { owner, repo } }, token) {
                 maxDelay: 1000,
                 startingDelay: 0,
                 timeMultiple: 1.5,
-                retry: (e, attemptNumber) => __awaiter(this, void 0, void 0, function* () { return shouldRetry(e, attemptNumber); }),
+                retry: (e, attemptNumber) => __awaiter(this, void 0, void 0, function* () { return yield shouldRetry(e, attemptNumber); }),
             });
             console.log("response", response);
         }
